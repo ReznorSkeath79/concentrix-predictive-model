@@ -153,14 +153,6 @@ tr:hover td { background: var(--surface-3); }
 .td-num  { font-family: var(--font-pixel); font-size: 13px; font-weight: 600; }
 .td-accent { font-family: var(--font-pixel); color: var(--accent-text); font-weight: 700; }
 
-/* ── SECTION NAV ──────────────────────────────────────────── */
-.section-nav { position: sticky; top: 56px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); z-index: 90; overflow-x: auto; scrollbar-width: none; }
-.section-nav::-webkit-scrollbar { display: none; }
-.section-nav__inner { display: flex; align-items: center; gap: 0; padding: 0 24px; min-width: max-content; }
-.nav-btn { padding: 11px 16px; background: none; border: none; border-bottom: 2.5px solid transparent; color: var(--text-subtle); font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: color 120ms, border-color 120ms; margin-bottom: -1.5px; }
-.nav-btn.active { color: var(--accent-text); border-bottom-color: var(--accent); }
-.nav-btn:hover:not(.active) { color: var(--text); }
-
 /* ── LAYOUT ───────────────────────────────────────────────── */
 .topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); position: sticky; top: 0; z-index: 100; }
 .topbar__right { display: flex; align-items: center; gap: 10px; }
@@ -168,10 +160,37 @@ tr:hover td { background: var(--surface-3); }
 .theme-toggle:hover { background: var(--surface-3); }
 .topbar__date { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; color: var(--text-subtle); }
 
-.page { max-width: 1120px; margin: 0 auto; padding: 36px 28px 80px; display: flex; flex-direction: column; gap: 48px; }
+/* app body = sidebar + content side by side */
+.app-body { display: flex; align-items: flex-start; min-height: calc(100vh - 56px); }
+
+/* ── SIDEBAR NAV ──────────────────────────────────────────── */
+.sidebar { width: 218px; flex-shrink: 0; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; border-right: 1.5px solid var(--border-strong); background: var(--surface-2); padding: 28px 0 40px; display: flex; flex-direction: column; gap: 0; scrollbar-width: none; }
+.sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar__logo-row { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.sidebar__logo-row .ds-pill { margin-top: 8px; }
+
+.sidebar__group-label { font-size: 9px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-subtle); padding: 14px 20px 6px; }
+
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; position: relative; transition: background var(--dur); }
+.nav-item:hover { background: var(--surface-3); }
+.nav-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: transparent; transition: background var(--dur); }
+.nav-item.active { background: var(--accent-tint); }
+.nav-item.active::before { background: var(--accent); }
+.nav-item__num { font-family: var(--font-pixel); font-size: 10px; font-weight: 700; color: var(--text-subtle); width: 22px; flex-shrink: 0; letter-spacing: 0.06em; }
+.nav-item.active .nav-item__num { color: var(--accent-text); }
+.nav-item__label { font-family: var(--font-sans); font-size: 12px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.nav-item.active .nav-item__label { color: var(--text); font-weight: 600; }
+
+.sidebar__divider { height: 1px; background: var(--border); margin: 10px 20px; }
+
+.sidebar__meta { padding: 14px 20px 0; font-size: 11px; color: var(--text-subtle); line-height: 1.6; }
+
+/* ── CONTENT ──────────────────────────────────────────────── */
+.content { flex: 1; min-width: 0; padding: 36px 32px 80px; display: flex; flex-direction: column; gap: 48px; max-width: 960px; }
 
 /* ── SECTIONS ─────────────────────────────────────────────── */
-section { scroll-margin-top: 112px; }
+section { scroll-margin-top: 72px; }
 .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
 .section-num { font-family: var(--font-pixel); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; color: var(--accent-text); }
 .section-title-row { margin-bottom: 24px; }
@@ -304,8 +323,10 @@ hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 
 .fi-pct { width: 36px; text-align: right; font-family: var(--font-pixel); font-size: 11px; color: var(--text-subtle); }
 .fi-dir { width: 60px; flex-shrink: 0; }
 
-@media (max-width: 860px) {
-  .kpi-rail { grid-template-columns: repeat(3,1fr); }
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 24px 16px 60px; }
+  .kpi-rail { grid-template-columns: repeat(2,1fr); }
   .two-col, .two-col--6040, .two-col--7030 { grid-template-columns: 1fr; }
   .feat-grid { grid-template-columns: repeat(2,1fr); }
   .pipeline { grid-template-columns: repeat(2,1fr); }
@@ -332,22 +353,66 @@ hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 
   </div>
 </header>
 
-<!-- ════════════ SECTION NAV ════════════ -->
-<nav class="section-nav">
-  <div class="section-nav__inner">
-    <button class="nav-btn active" onclick="scrollTo('exec')">Executive Summary</button>
-    <button class="nav-btn" onclick="scrollTo('problem')">The Problem</button>
-    <button class="nav-btn" onclick="scrollTo('data')">Data Used</button>
-    <button class="nav-btn" onclick="scrollTo('model')">Model Build</button>
-    <button class="nav-btn" onclick="scrollTo('performance')">Performance</button>
-    <button class="nav-btn" onclick="scrollTo('usage')">How to Use</button>
-    <button class="nav-btn" onclick="scrollTo('recs')">Recommendations</button>
-    <button class="nav-btn" onclick="scrollTo('techref')">Technical Ref</button>
-  </div>
-</nav>
+<!-- ════════════ APP BODY ════════════ -->
+<div class="app-body">
 
-<!-- ════════════ MAIN ════════════ -->
-<div class="page">
+<!-- ════════════ SIDEBAR ════════════ -->
+<aside class="sidebar">
+  <div class="sidebar__logo-row">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--text-subtle)">KPI Predictive Model</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-top:2px">Leadership Brief</div>
+    <span class="ds-pill ds-pill--ok" style="margin-top:8px;display:inline-flex"><span class="ds-dot ds-dot--ok"></span>Phase 2 Complete</span>
+  </div>
+
+  <span class="sidebar__group-label">Contents</span>
+
+  <button class="nav-item active" data-section="exec" onclick="navTo('exec',this)">
+    <span class="nav-item__num">01</span>
+    <span class="nav-item__label">Executive Summary</span>
+  </button>
+  <button class="nav-item" data-section="problem" onclick="navTo('problem',this)">
+    <span class="nav-item__num">02</span>
+    <span class="nav-item__label">The Problem</span>
+  </button>
+  <button class="nav-item" data-section="data" onclick="navTo('data',this)">
+    <span class="nav-item__num">03</span>
+    <span class="nav-item__label">Data Used</span>
+  </button>
+  <button class="nav-item" data-section="model" onclick="navTo('model',this)">
+    <span class="nav-item__num">04</span>
+    <span class="nav-item__label">Model Build</span>
+  </button>
+  <button class="nav-item" data-section="performance" onclick="navTo('performance',this)">
+    <span class="nav-item__num">05</span>
+    <span class="nav-item__label">Performance</span>
+  </button>
+  <button class="nav-item" data-section="usage" onclick="navTo('usage',this)">
+    <span class="nav-item__num">06</span>
+    <span class="nav-item__label">How to Use</span>
+  </button>
+  <button class="nav-item" data-section="recs" onclick="navTo('recs',this)">
+    <span class="nav-item__num">07</span>
+    <span class="nav-item__label">Recommendations</span>
+  </button>
+  <button class="nav-item" data-section="techref" onclick="navTo('techref',this)">
+    <span class="nav-item__num">08</span>
+    <span class="nav-item__label">Technical Ref</span>
+  </button>
+
+  <div class="sidebar__divider"></div>
+
+  <div class="sidebar__meta">
+    <div style="font-weight:600;color:var(--text);margin-bottom:4px">Model Stats</div>
+    <div>AUC <span style="font-family:var(--font-pixel);color:var(--accent-text)">0.762</span></div>
+    <div>Accuracy <span style="font-family:var(--font-pixel);color:var(--accent-text)">58.3%</span></div>
+    <div>Lift <span style="font-family:var(--font-pixel);color:var(--status-ok)">+25pp</span></div>
+    <div>Features <span style="font-family:var(--font-pixel);color:var(--text)">122</span></div>
+    <div>Agents <span style="font-family:var(--font-pixel);color:var(--text)">41,717</span></div>
+  </div>
+</aside>
+
+<!-- ════════════ MAIN CONTENT ════════════ -->
+<main class="content">
 
   <!-- ═══ 0. HERO ═══ -->
   <div class="hero">
@@ -1181,25 +1246,40 @@ python -m src.train_kpi_model
     </div>
   </section>
 
-</div><!-- /page -->
+</main><!-- /content -->
+</div><!-- /app-body -->
 
 <script>
-  /* nav active state */
-  const sections = ['exec','problem','data','model','performance','usage','recs','techref'];
-  const navBtns = document.querySelectorAll('.nav-btn');
-  function scrollTo(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-  }
-  window.addEventListener('scroll', () => {
-    let cur = sections[0];
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && window.scrollY >= el.offsetTop - 130) cur = id;
-    });
-    navBtns.forEach((b,i) => b.classList.toggle('active', sections[i] === cur));
-  }, { passive: true });
+  /* ── SIDEBAR NAV ── */
+  const SECTION_IDS = ['exec','problem','data','model','performance','usage','recs','techref'];
 
-  /* theme toggle */
+  function navTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setActive(id) {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.section === id);
+    });
+  }
+
+  /* IntersectionObserver — fires when a section crosses the 20% from-top threshold */
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-56px 0px -70% 0px', threshold: 0 }
+  );
+  SECTION_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  /* ── THEME TOGGLE ── */
   function toggleTheme(btn) {
     const app = document.getElementById('app');
     const isDark = app.getAttribute('data-theme') === 'dark';
