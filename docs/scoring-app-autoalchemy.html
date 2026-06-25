@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KPI Performance Predictor · AutoAlchemy</title>
+
+<!-- AutoAlchemy Design System — Outfit + Doto -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Doto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   TOKENS — colors, typography, spacing (inlined from AutoAlchemy DS)
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+:root {
+  /* ---- accent ---- */
+  --orange: #FF6B1A;
+  --orange-2: #E85B10;
+  --orange-ink: #B0470C;
+  --orange-soft: rgba(255,107,26,0.12);
+  --orange-tint: rgba(255,107,26,0.07);
+
+  /* ---- paper ---- */
+  --paper-0: #FBF9F4;
+  --paper-1: #F2EFE8;
+  --paper-2: #E8E3D8;
+  --paper-3: #DED8CB;
+
+  /* ---- ink ---- */
+  --ink: #1C1A16;
+  --ink-2: #57534A;
+  --ink-3: #8B8678;
+
+  /* ---- hairlines ---- */
+  --line: #DED8CB;
+  --line-2: #E9E4D9;
+
+  /* ---- dark surfaces ---- */
+  --dk-0: #1C1A16;
+  --dk-1: #242118;
+  --dk-2: #2C2820;
+  --dk-3: #38342A;
+  --dk-text-0: #F2EFE8;
+  --dk-text-1: #C2BCAE;
+  --dk-text-2: #8E8A7C;
+
+  /* ---- status ---- */
+  --green: #5B7A3F;
+  --amber: #B8801F;
+  --red: #C0432C;
+  --info: #4A6B7A;
+
+  /* ---- semantic aliases · LIGHT ---- */
+  --bg: var(--paper-0);
+  --bg-dot: rgba(28,26,22,0.13);
+  --surface: var(--paper-1);
+  --surface-2: var(--paper-0);
+  --surface-3: var(--paper-3);
+  --surface-inverse: var(--ink);
+  --text: var(--ink);
+  --text-muted: var(--ink-2);
+  --text-subtle: var(--ink-3);
+  --text-inverse: var(--paper-0);
+  --border: var(--line);
+  --border-soft: var(--line-2);
+  --border-strong: var(--ink);
+  --border-hot: var(--orange);
+  --accent: var(--orange);
+  --accent-2: var(--orange-2);
+  --accent-text: var(--orange-ink);
+  --accent-soft: var(--orange-soft);
+  --accent-tint: var(--orange-tint);
+  --on-accent: #FFFFFF;
+  --focus-ring: var(--orange);
+  --status-ok: var(--green);
+  --status-warn: var(--amber);
+  --status-crit: var(--red);
+  --status-info: var(--info);
+  --ok-tint: rgba(91,122,63,0.12);
+  --warn-tint: rgba(184,128,31,0.12);
+  --crit-tint: rgba(192,67,44,0.12);
+  --info-tint: rgba(74,107,122,0.12);
+  --well: var(--paper-2);
+  color-scheme: light;
+
+  /* ---- spacing ---- */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 10px;
+  --space-md: 14px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --pad-card: 20px;
+  --pad-card-lg: 30px;
+  --gap-layout: 18px;
+
+  /* ---- radius (near-square) ---- */
+  --r-xs: 0px;
+  --r-sm: 2px;
+  --r-md: 2px;
+  --r-lg: 3px;
+  --r-xl: 4px;
+  --r-block: 4px;
+
+  /* ---- elevation (hard offset, no blur) ---- */
+  --shadow-hard: 4px 4px 0 0 var(--ink);
+  --shadow-hard-sm: 3px 3px 0 0 var(--ink);
+  --shadow-hard-accent: 4px 4px 0 0 var(--accent);
+  --shadow-pop: 6px 6px 0 0 var(--ink);
+
+  /* ---- motion ---- */
+  --ease: cubic-bezier(0.2,0.8,0.2,1);
+  --ease-out: cubic-bezier(0.16,1,0.3,1);
+  --dur-fast: 110ms;
+  --dur: 170ms;
+  --dur-slow: 320ms;
+
+  /* ---- dot matrix ---- */
+  --dot-size: 6px;
+  --dot-r: 1px;
+
+  /* ---- type ---- */
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Doto', 'Outfit', monospace;
+  --font-mono: var(--font-sans);
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+  --w-bold: 700;
+  --w-black: 900;
+  --t-body-size: 14px;
+  --t-body-sm-size: 13px;
+  --t-body-lh: 1.55;
+  --t-body-sm-lh: 1.50;
+  --t-button-size: 13px;
+  --t-button-track: 0.01em;
+  --t-mono-label-size: 11px;
+  --t-mono-label-track: 0.16em;
+  --t-mono-body-size: 12px;
+  --t-mono-body-track: 0.04em;
+  --t-eyebrow-size: 12px;
+  --t-eyebrow-track: 0.22em;
+  --t-page-size: 30px;
+  --t-kpi-size: 30px;
+  --t-kpi-weight: var(--w-medium);
+  --t-kpi-lh: 1.05;
+  --t-kpi-track: 0.01em;
+  --t-pixel-xl-size: 60px;
+  --t-pixel-xl-weight: var(--w-black);
+  --t-logo-size: 18px;
+  --t-logo-track: 0.01em;
+}
+
+[data-theme="dark"] {
+  --bg: var(--dk-0);
+  --bg-dot: rgba(242,239,232,0.12);
+  --surface: var(--dk-1);
+  --surface-2: var(--dk-0);
+  --surface-3: var(--dk-3);
+  --surface-inverse: var(--paper-1);
+  --text: var(--dk-text-0);
+  --text-muted: var(--dk-text-1);
+  --text-subtle: var(--dk-text-2);
+  --text-inverse: var(--ink);
+  --border: rgba(242,239,232,0.14);
+  --border-soft: rgba(242,239,232,0.08);
+  --border-strong: var(--dk-text-0);
+  --accent: #FF6B1A;
+  --accent-2: #FF8038;
+  --accent-text: #FF8A45;
+  --accent-soft: rgba(255,107,26,0.18);
+  --accent-tint: rgba(255,107,26,0.10);
+  --on-accent: #1C1A16;
+  --focus-ring: #FF8038;
+  --status-ok: #7FA85C;
+  --status-warn: #D6A03E;
+  --status-crit: #DB5C44;
+  --status-info: #6E97A8;
+  --ok-tint: rgba(127,168,92,0.14);
+  --warn-tint: rgba(214,160,62,0.14);
+  --crit-tint: rgba(219,92,68,0.14);
+  --info-tint: rgba(110,151,168,0.14);
+  --well: var(--dk-2);
+  --shadow-hard: 4px 4px 0 0 #000;
+  --shadow-hard-sm: 3px 3px 0 0 #000;
+  --shadow-pop: 6px 6px 0 0 #000;
+  color-scheme: dark;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-size);
+  font-weight: var(--w-regular);
+  line-height: var(--t-body-lh);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Dot-matrix page texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--bg-dot) var(--dot-r), transparent calc(var(--dot-r) + 0.5px));
+  background-size: var(--dot-size) var(--dot-size);
+  opacity: 0.6;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, var(--accent-tint), transparent 60%);
+}
+body > * { position: relative; z-index: 1; }
+
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 0; }
+::selection { background: var(--accent); color: var(--on-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--ink-3) transparent; }
+*::-webkit-scrollbar { width: 8px; }
+*::-webkit-scrollbar-thumb { background: var(--ink-3); border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: content-box; }
+
+/* ============================================================
+   TYPE UTILITIES
+   ============================================================ */
+.t-eyebrow { font-size: var(--t-eyebrow-size); font-weight: var(--w-bold); letter-spacing: var(--t-eyebrow-track); text-transform: uppercase; color: var(--text-subtle); }
+.t-page    { font-size: var(--t-page-size); font-weight: var(--w-bold); line-height: 1.15; letter-spacing: -0.015em; }
+.t-body-sm { font-size: var(--t-body-sm-size); line-height: var(--t-body-sm-lh); }
+.t-mono-label { font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; color: var(--text-subtle); }
+.t-logo { font-size: var(--t-logo-size); font-weight: var(--w-bold); letter-spacing: var(--t-logo-track); }
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+
+/* --- LOGO --- */
+.ds-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: var(--t-logo-size); font-weight: var(--w-bold); letter-spacing: var(--t-logo-track); color: var(--text); }
+.ds-logo__mark { width: 24px; height: 24px; flex: none; background-image: radial-gradient(var(--text) 1px, transparent 1.5px); background-size: 4px 4px; -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%); mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%); }
+.ds-logo__pixel { font-family: var(--font-pixel); font-weight: var(--w-bold); letter-spacing: 0.04em; }
+
+/* --- PILL --- */
+.ds-pill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; padding: 4px 9px; border: 1px solid var(--border-strong); border-radius: var(--r-sm); background: transparent; color: var(--text-muted); white-space: nowrap; }
+.ds-pill--hot  { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+.ds-pill--ok   { color: var(--status-ok); border-color: var(--status-ok); }
+.ds-pill--warn { color: var(--status-warn); border-color: var(--status-warn); }
+.ds-pill--crit { color: var(--status-crit); border-color: var(--status-crit); }
+.ds-pill--info { color: var(--status-info); border-color: var(--status-info); }
+
+/* --- STATUS DOT --- */
+.ds-dot { width: 7px; height: 7px; border-radius: var(--r-sm); flex: none; display: inline-block; background: var(--text-subtle); }
+.ds-dot--ok     { background: var(--status-ok); }
+.ds-dot--warn   { background: var(--status-warn); }
+.ds-dot--crit   { background: var(--status-crit); }
+.ds-dot--accent { background: var(--accent); }
+
+/* --- CARD --- */
+.ds-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); }
+.ds-card--flat { border: 1px solid var(--border); box-shadow: none; }
+.ds-card--hard { box-shadow: var(--shadow-hard); }
+.ds-card__head { display: flex; align-items: center; gap: var(--space-sm); font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; color: var(--text-subtle); margin-bottom: var(--space-md); }
+.ds-card__head::before { content: ""; width: 8px; height: 8px; background: var(--accent); flex: none; }
+
+/* --- KPI TILE --- */
+.ds-kpi { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); display: flex; flex-direction: column; gap: var(--space-sm); }
+.ds-kpi__label { font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; color: var(--text-subtle); }
+.ds-kpi__value { font-family: var(--font-pixel); font-size: var(--t-kpi-size); font-weight: var(--w-bold); line-height: var(--t-kpi-lh); letter-spacing: var(--t-kpi-track); color: var(--text); font-variant-numeric: tabular-nums; }
+.ds-kpi__foot { display: flex; align-items: center; gap: var(--space-xs); }
+.ds-kpi--hero { background: var(--well); padding: var(--space-xl); box-shadow: none; border-color: var(--border); }
+.ds-kpi--hero .ds-kpi__value { font-size: var(--t-pixel-xl-size); font-weight: var(--t-pixel-xl-weight); letter-spacing: 0.01em; line-height: 1; }
+.ds-kpi--accent .ds-kpi__value { color: var(--accent-text); }
+
+/* --- ALERT --- */
+.ds-alert { border: 1.5px solid var(--text-subtle); border-radius: var(--r-sm); padding: var(--pad-card); font-size: var(--t-body-sm-size); color: var(--text); }
+.ds-alert__title { font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; margin-bottom: 6px; }
+.ds-alert--crit { background: var(--crit-tint); border-color: var(--status-crit); }
+.ds-alert--crit .ds-alert__title { color: var(--status-crit); }
+.ds-alert--warn { background: var(--warn-tint); border-color: var(--status-warn); }
+.ds-alert--warn .ds-alert__title { color: var(--status-warn); }
+.ds-alert--ok { background: var(--ok-tint); border-color: var(--status-ok); }
+.ds-alert--ok .ds-alert__title { color: var(--status-ok); }
+.ds-alert--info { background: var(--info-tint); border-color: var(--status-info); }
+.ds-alert--info .ds-alert__title { color: var(--status-info); }
+
+/* --- BUTTON --- */
+.ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); font-family: var(--font-sans); font-size: var(--t-button-size); font-weight: var(--w-semibold); letter-spacing: var(--t-button-track); line-height: 1; padding: 10px 16px; min-height: 38px; border: 1.5px solid transparent; border-radius: var(--r-md); background: var(--surface); color: var(--text); cursor: pointer; white-space: nowrap; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease); }
+.ds-btn:active { transform: translate(1px,1px); }
+.ds-btn--primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ds-btn--primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.ds-btn--default { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.ds-btn--default:hover { background: var(--surface-3); }
+.ds-btn--hard { border-color: var(--border-strong); box-shadow: var(--shadow-hard-sm); }
+.ds-btn--hard:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--ink); }
+.ds-btn--hard:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
+.ds-btn--block { display: flex; width: 100%; justify-content: center; }
+.ds-btn--sm { font-size: 12px; padding: 7px 12px; min-height: 32px; }
+
+/* --- INPUT --- */
+.ds-input { font-family: var(--font-sans); font-size: var(--t-body-size); color: var(--text); background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-md); padding: 10px 12px; min-height: 42px; width: 100%; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.ds-input::placeholder { color: var(--text-subtle); }
+.ds-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--shadow-hard-sm); }
+.ds-field { display: flex; flex-direction: column; gap: 7px; }
+.ds-field__label { font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; color: var(--text-subtle); }
+
+/* --- SELECT (inherit input style) --- */
+.ds-select { font-family: var(--font-sans); font-size: var(--t-body-size); color: var(--text); background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-md); padding: 10px 12px; min-height: 42px; width: 100%; appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B8678' stroke-width='1.5' fill='none' stroke-linecap='square'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.ds-select:focus { outline: none; border-color: var(--accent); }
+
+/* --- CHIP --- */
+.ds-chip { font-family: var(--font-sans); font-size: var(--t-body-sm-size); color: var(--text-muted); background: transparent; border: 1px solid var(--border-strong); border-radius: var(--r-sm); padding: 6px 12px; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.ds-chip:hover { background: var(--surface-3); color: var(--text); }
+
+/* --- SEGMENTED CONTROL --- */
+.ds-seg { display: inline-flex; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); overflow: hidden; }
+.ds-seg__btn { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); background: var(--surface); border: none; border-right: 1px solid var(--border-strong); border-radius: 0; padding: 8px 14px; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.ds-seg__btn:last-child { border-right: none; }
+.ds-seg__btn:hover { background: var(--surface-3); color: var(--text); }
+.ds-seg__btn--active { background: var(--accent); color: var(--on-accent); }
+.ds-seg__btn--active:hover { background: var(--accent-2); }
+
+/* --- CHECKBOX ROW --- */
+.ds-check { display: flex; align-items: center; gap: 9px; font-size: var(--t-body-size); color: var(--text-muted); cursor: pointer; padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); transition: border-color var(--dur), background var(--dur); }
+.ds-check:hover { border-color: var(--border-strong); background: var(--surface-3); color: var(--text); }
+.ds-check input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
+
+/* --- COLLAPSIBLE SECTION --- */
+.ds-section { border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 8px; box-shadow: var(--shadow-hard-sm); }
+.ds-section__head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; background: var(--surface); user-select: none; }
+.ds-section__head:hover { background: var(--surface-3); }
+.ds-section__title { font-family: var(--font-mono); font-size: var(--t-mono-label-size); font-weight: var(--w-semibold); letter-spacing: var(--t-mono-label-track); text-transform: uppercase; color: var(--text); }
+.ds-section__chevron { font-size: 10px; color: var(--text-subtle); transition: transform var(--dur); }
+.ds-section.open .ds-section__chevron { transform: rotate(180deg); }
+.ds-section__body { display: none; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--surface); }
+.ds-section.open .ds-section__body { display: block; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout { display: flex; min-height: 100vh; flex-direction: column; }
+
+/* HEADER */
+.topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); position: sticky; top: 0; z-index: 100; }
+.topbar__left { display: flex; align-items: center; gap: 20px; }
+.topbar__right { display: flex; align-items: center; gap: 12px; }
+.topbar__time { font-family: var(--font-pixel); font-size: 12px; letter-spacing: 0.06em; color: var(--text-subtle); }
+
+/* MAIN CONTENT */
+.main { display: flex; flex: 1; }
+
+/* SIDEBAR */
+.sidebar { width: 240px; flex-shrink: 0; border-right: 1.5px solid var(--border-strong); background: var(--surface-2); padding: 24px 0; display: flex; flex-direction: column; gap: 0; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; }
+.sidebar__section { padding: 6px 16px 14px; border-bottom: 1px solid var(--border); }
+.sidebar__section:last-child { border-bottom: none; }
+.sidebar__label { font-family: var(--font-mono); font-size: 10px; font-weight: var(--w-semibold); letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-subtle); padding: 10px 16px 4px; }
+
+.sidebar-kpi { display: flex; flex-direction: column; gap: 6px; }
+.sidebar-kpi__row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--border-soft); }
+.sidebar-kpi__row:last-child { border-bottom: none; }
+.sidebar-kpi__name { font-size: 11px; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.08em; }
+.sidebar-kpi__val { font-family: var(--font-pixel); font-size: 16px; font-weight: var(--w-bold); color: var(--accent-text); }
+
+.cutpoint-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border-soft); }
+.cutpoint-row:last-child { border-bottom: none; }
+.cut-dot { width: 7px; height: 7px; border-radius: 1px; flex-shrink: 0; }
+
+/* CONTENT AREA */
+.content { flex: 1; min-width: 0; padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 20px; }
+
+/* KPI RAIL */
+.kpi-rail { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 14px; }
+
+/* GRID PANELS */
+.panels { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(280px,1fr); gap: 14px; }
+
+/* FORM GRID */
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.checkbox-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+/* RESULT LAYOUT */
+.result-grid { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start; margin-top: 20px; }
+
+/* TIER BADGE */
+.tier-badge { border: 1.5px solid; border-radius: var(--r-lg); padding: 20px 14px; text-align: center; }
+.tier-badge__icon { font-size: 1.8rem; margin-bottom: 8px; }
+.tier-badge__name { font-family: var(--font-pixel); font-size: 22px; font-weight: var(--w-bold); line-height: 1.1; margin-bottom: 4px; }
+.tier-badge__sub { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-subtle); }
+.tier-badge--crit { background: var(--crit-tint); border-color: var(--status-crit); }
+.tier-badge--crit .tier-badge__name { color: var(--status-crit); }
+.tier-badge--warn { background: var(--warn-tint); border-color: var(--status-warn); }
+.tier-badge--warn .tier-badge__name { color: var(--status-warn); }
+.tier-badge--ok { background: var(--ok-tint); border-color: var(--status-ok); }
+.tier-badge--ok .tier-badge__name { color: var(--status-ok); }
+
+/* PROB BARS */
+.prob-row { margin-bottom: 14px; }
+.prob-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; font-size: 12px; }
+.prob-header .name { font-weight: var(--w-semibold); letter-spacing: 0.03em; }
+.prob-pct { font-family: var(--font-pixel); font-size: 14px; font-weight: var(--w-bold); }
+.prob-track { height: 5px; background: var(--well); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
+.prob-fill { height: 100%; transition: width 0.6s var(--ease-out); }
+
+/* TABLE */
+.ds-table-wrap { border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: var(--well); }
+th { padding: 9px 14px; text-align: left; font-family: var(--font-mono); font-size: 10px; font-weight: var(--w-semibold); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-subtle); border-bottom: 1.5px solid var(--border-strong); white-space: nowrap; }
+th.sort-col { color: var(--accent-text); }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface-3); }
+.td-num { font-family: var(--font-pixel); font-size: 13px; font-weight: var(--w-medium); }
+
+/* UPLOAD ZONE */
+.upload-zone { border: 1.5px dashed var(--border-strong); border-radius: var(--r-lg); padding: 40px; text-align: center; cursor: pointer; transition: border-color var(--dur), background var(--dur); }
+.upload-zone:hover { border-color: var(--accent); background: var(--accent-tint); }
+.upload-zone__icon { font-size: 28px; margin-bottom: 10px; }
+.upload-zone__main { font-size: 15px; font-weight: var(--w-semibold); margin-bottom: 6px; }
+.upload-zone__sub { font-size: 12px; color: var(--text-subtle); }
+
+/* DIVIDER */
+.divider { height: 1.5px; background: var(--border); margin: 18px 0; }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 1.5px solid var(--border-strong); margin-bottom: 24px; }
+.tab-btn { padding: 10px 18px; background: none; border: none; border-bottom: 2.5px solid transparent; color: var(--text-subtle); font-family: var(--font-mono); font-size: 11px; font-weight: var(--w-semibold); letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: color var(--dur), border-color var(--dur); margin-bottom: -1.5px; }
+.tab-btn.active { color: var(--accent-text); border-bottom-color: var(--accent); }
+.tab-btn:hover:not(.active) { color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* METRIC SUMMARY */
+.metric-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+.metric-block { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 14px 16px; box-shadow: var(--shadow-hard-sm); }
+.metric-block__label { font-family: var(--font-mono); font-size: 10px; font-weight: var(--w-semibold); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 4px; }
+.metric-block__val { font-family: var(--font-pixel); font-size: 28px; font-weight: var(--w-bold); line-height: 1; }
+.metric-block--crit .metric-block__val { color: var(--status-crit); }
+.metric-block--warn .metric-block__val { color: var(--status-warn); }
+.metric-block--ok .metric-block__val { color: var(--status-ok); }
+
+/* THEME TOGGLE */
+.theme-toggle { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-subtle); cursor: pointer; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); padding: 5px 10px; background: var(--surface); transition: background var(--dur); }
+.theme-toggle:hover { background: var(--surface-3); }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .kpi-rail { grid-template-columns: 1fr 1fr; }
+  .panels { grid-template-columns: 1fr; }
+  .checkbox-grid { grid-template-columns: repeat(2,1fr); }
+  .result-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+<div class="layout" id="app" data-theme="light">
+
+  <!-- ════════════ HEADER ════════════ -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="ds-logo">
+        <span class="ds-logo__mark"></span>
+        Auto<span class="ds-logo__pixel">Alchemy</span>
+      </span>
+      <span class="ds-pill ds-pill--hot"><span class="ds-dot ds-dot--accent"></span>Live</span>
+    </div>
+    <div class="topbar__right">
+      <span class="topbar__time" id="clock">26 JUN 2026 · 00:00 UTC</span>
+      <button class="theme-toggle" onclick="toggleTheme(this)">☀ Light</button>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- ════════════ SIDEBAR ════════════ -->
+    <aside class="sidebar">
+      <div class="sidebar__label">Model</div>
+      <div class="sidebar__section">
+        <div class="sidebar-kpi">
+          <div class="sidebar-kpi__row">
+            <span class="sidebar-kpi__name">AUC</span>
+            <span class="sidebar-kpi__val">0.762</span>
+          </div>
+          <div class="sidebar-kpi__row">
+            <span class="sidebar-kpi__name">Accuracy</span>
+            <span class="sidebar-kpi__val">58.3%</span>
+          </div>
+          <div class="sidebar-kpi__row">
+            <span class="sidebar-kpi__name">Baseline</span>
+            <span class="sidebar-kpi__val">33.3%</span>
+          </div>
+          <div class="sidebar-kpi__row">
+            <span class="sidebar-kpi__name">Lift</span>
+            <span class="sidebar-kpi__val" style="color:var(--status-ok)">+25pp</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar__label">KPI Cutpoints</div>
+      <div class="sidebar__section">
+        <div class="cutpoint-row">
+          <div class="cut-dot" style="background:var(--status-crit)"></div>
+          <div><strong>At-Risk</strong> — PTG &lt; 91.7%</div>
+        </div>
+        <div class="cutpoint-row">
+          <div class="cut-dot" style="background:var(--status-warn)"></div>
+          <div><strong>Developing</strong> — 91.7 – 103%</div>
+        </div>
+        <div class="cutpoint-row">
+          <div class="cut-dot" style="background:var(--status-ok)"></div>
+          <div><strong>High Performer</strong> — PTG &gt; 103%</div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-subtle);line-height:1.6">
+          41,717 labeled agents<br>Tercile-based · each tier ≈ 33%
+        </div>
+      </div>
+
+      <div class="sidebar__label">Training</div>
+      <div class="sidebar__section">
+        <div class="cutpoint-row" style="border:none;padding:3px 0">
+          <div style="font-size:11px;color:var(--text-subtle)">Algorithm</div>
+          <div style="font-size:11px;font-weight:600">LightGBM</div>
+        </div>
+        <div class="cutpoint-row" style="border:none;padding:3px 0">
+          <div style="font-size:11px;color:var(--text-subtle)">Features</div>
+          <div style="font-size:11px;font-weight:600">122 pre-hire</div>
+        </div>
+        <div class="cutpoint-row" style="border:none;padding:3px 0;border-top:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--text-subtle)">Classes</div>
+          <div style="font-size:11px;font-weight:600">3 tiers</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ════════════ CONTENT ════════════ -->
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div>
+        <div class="t-eyebrow">Concentrix PH · Advisor Performance Intelligence</div>
+        <h1 class="t-page" style="margin:6px 0 0">KPI Performance Predictor.</h1>
+      </div>
+
+      <!-- KPI RAIL -->
+      <div class="kpi-rail">
+        <div class="ds-kpi ds-kpi--hero ds-kpi--accent">
+          <span class="ds-kpi__label">Model Accuracy</span>
+          <span class="ds-kpi__value">58.3<span style="font-size:0.4em;color:var(--text-subtle);margin-left:3px">%</span></span>
+          <div class="ds-kpi__foot"><span class="ds-pill ds-pill--hot"><span class="ds-dot ds-dot--accent"></span>+25pp lift</span></div>
+        </div>
+        <div class="ds-kpi">
+          <span class="ds-kpi__label">Labeled Agents</span>
+          <span class="ds-kpi__value">41.7<span style="font-size:0.5em;color:var(--text-subtle);margin-left:3px">k</span></span>
+          <div class="ds-kpi__foot"><span class="ds-pill ds-pill--ok">CDM · 64.1%</span></div>
+        </div>
+        <div class="ds-kpi">
+          <span class="ds-kpi__label">Features</span>
+          <span class="ds-kpi__value">122</span>
+          <div class="ds-kpi__foot"><span class="ds-pill">Pre-hire only</span></div>
+        </div>
+        <div class="ds-kpi">
+          <span class="ds-kpi__label">Macro AUC</span>
+          <span class="ds-kpi__value">0.762</span>
+          <div class="ds-kpi__foot"><span class="ds-pill ds-pill--ok">3-class</span></div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('form',this)">Score Candidate</button>
+          <button class="tab-btn" onclick="switchTab('batch',this)">Batch Upload</button>
+        </div>
+
+        <!-- ═══ TAB 1: SCORE CANDIDATE ═══ -->
+        <div id="tab-form" class="tab-panel active">
+          <div class="panels">
+
+            <!-- FORM PANEL -->
+            <div class="ds-card ds-card--hard">
+              <div class="ds-card__head">Candidate Profile<span class="ds-pill" style="margin-left:auto">122 fields</span></div>
+
+              <div class="ds-section open">
+                <div class="ds-section__head" onclick="toggleSection(this)">
+                  <span class="ds-section__title">Certifications &amp; Licences</span>
+                  <span class="ds-section__chevron">▼</span>
+                </div>
+                <div class="ds-section__body">
+                  <div class="checkbox-grid">
+                    <label class="ds-check"><input type="checkbox"> CL-PRC</label>
+                    <label class="ds-check"><input type="checkbox"> CL-CISCO</label>
+                    <label class="ds-check"><input type="checkbox"> CL-Salesforce</label>
+                    <label class="ds-check"><input type="checkbox"> CL-AWS</label>
+                    <label class="ds-check"><input type="checkbox"> CL-Azure</label>
+                    <label class="ds-check"><input type="checkbox"> CL-GCP</label>
+                    <label class="ds-check"><input type="checkbox"> CL-ITIL</label>
+                    <label class="ds-check"><input type="checkbox"> CL-Six Sigma</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ds-section">
+                <div class="ds-section__head" onclick="toggleSection(this)">
+                  <span class="ds-section__title">Support &amp; Channel Experience</span>
+                  <span class="ds-section__chevron">▼</span>
+                </div>
+                <div class="ds-section__body">
+                  <div class="checkbox-grid">
+                    <label class="ds-check"><input type="checkbox"> S-Voice</label>
+                    <label class="ds-check"><input type="checkbox"> S-Non-Voice</label>
+                    <label class="ds-check"><input type="checkbox"> S-Chat</label>
+                    <label class="ds-check"><input type="checkbox"> S-Email</label>
+                    <label class="ds-check"><input type="checkbox"> ChS-Inbound</label>
+                    <label class="ds-check"><input type="checkbox"> ChS-Outbound</label>
+                    <label class="ds-check"><input type="checkbox"> ChS-Blended</label>
+                    <label class="ds-check"><input type="checkbox"> S-Tech Support</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ds-section">
+                <div class="ds-section__head" onclick="toggleSection(this)">
+                  <span class="ds-section__title">Leadership &amp; Industry Background</span>
+                  <span class="ds-section__chevron">▼</span>
+                </div>
+                <div class="ds-section__body">
+                  <div class="checkbox-grid">
+                    <label class="ds-check"><input type="checkbox"> L-Team Lead</label>
+                    <label class="ds-check"><input type="checkbox"> L-Supervisor</label>
+                    <label class="ds-check"><input type="checkbox"> L-Manager</label>
+                    <label class="ds-check"><input type="checkbox"> V-Financial</label>
+                    <label class="ds-check"><input type="checkbox"> V-Telco</label>
+                    <label class="ds-check"><input type="checkbox"> V-Healthcare</label>
+                    <label class="ds-check"><input type="checkbox"> V-Retail</label>
+                    <label class="ds-check"><input type="checkbox"> Tr-Own Vehicle</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ds-section open">
+                <div class="ds-section__head" onclick="toggleSection(this)">
+                  <span class="ds-section__title">Demographics &amp; Org Context</span>
+                  <span class="ds-section__chevron">▼</span>
+                </div>
+                <div class="ds-section__body">
+                  <div class="form-grid-2">
+                    <div class="ds-field">
+                      <label class="ds-field__label">GC Region</label>
+                      <select class="ds-select"><option>NCR</option><option>Luzon</option><option>Visayas</option><option>Mindanao</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Management Level</label>
+                      <select class="ds-select"><option>Agent</option><option>Senior Agent</option><option>Lead</option><option>Supervisor</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Client</label>
+                      <select class="ds-select"><option>Client A</option><option>Client B</option><option>Client C</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Program</label>
+                      <select class="ds-select"><option>Tech Support</option><option>Customer Service</option><option>Collections</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Site</label>
+                      <select class="ds-select"><option>Makati</option><option>BGC</option><option>Ortigas</option><option>Cebu</option><option>Davao</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Work-At-Home Status</label>
+                      <select class="ds-select"><option>On-site</option><option>Hybrid</option><option>Full WFH</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Job Grade</label>
+                      <select class="ds-select"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option></select>
+                    </div>
+                    <div class="ds-field">
+                      <label class="ds-field__label">Site Distance (km)</label>
+                      <input class="ds-input" type="number" value="0" min="0" max="200" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:16px">
+                <button class="ds-btn ds-btn--primary ds-btn--block ds-btn--hard" onclick="showResult()">
+                  Run Prediction
+                </button>
+              </div>
+            </div>
+
+            <!-- RESULT PANEL -->
+            <div style="display:flex;flex-direction:column;gap:14px">
+
+              <!-- RESULT CARD (shown after predict) -->
+              <div class="ds-card" id="result-card" style="display:none">
+                <div class="ds-card__head">Prediction Output</div>
+                <div class="result-grid">
+                  <div class="tier-badge tier-badge--warn" id="tier-badge">
+                    <div class="tier-badge__icon">⚡</div>
+                    <div class="tier-badge__name" id="tier-name">Developing</div>
+                    <div class="tier-badge__sub">Predicted KPI Tier</div>
+                  </div>
+                  <div>
+                    <div class="t-mono-label" style="margin-bottom:12px">Probability Breakdown</div>
+                    <div class="prob-row">
+                      <div class="prob-header">
+                        <span class="name" style="color:var(--status-crit)">▪ At-Risk</span>
+                        <span class="prob-pct" style="color:var(--status-crit)">18.4%</span>
+                      </div>
+                      <div class="prob-track"><div class="prob-fill" style="width:18.4%;background:var(--status-crit)"></div></div>
+                    </div>
+                    <div class="prob-row">
+                      <div class="prob-header">
+                        <span class="name" style="color:var(--status-warn)">▪ Developing</span>
+                        <span class="prob-pct" style="color:var(--status-warn)">54.1%</span>
+                      </div>
+                      <div class="prob-track"><div class="prob-fill" style="width:54.1%;background:var(--status-warn)"></div></div>
+                    </div>
+                    <div class="prob-row">
+                      <div class="prob-header">
+                        <span class="name" style="color:var(--status-ok)">▪ High Performer</span>
+                        <span class="prob-pct" style="color:var(--status-ok)">27.5%</span>
+                      </div>
+                      <div class="prob-track"><div class="prob-fill" style="width:27.5%;background:var(--status-ok)"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EMPTY STATE (before predict) -->
+              <div class="ds-card ds-card--flat" id="empty-card" style="text-align:center;padding:40px 20px">
+                <div style="font-family:var(--font-pixel);font-size:32px;color:var(--accent-text);margin-bottom:12px">?</div>
+                <div class="t-mono-label" style="margin-bottom:6px">No prediction yet</div>
+                <div class="t-body-sm" style="color:var(--text-subtle)">Fill in the candidate profile<br>and click Run Prediction.</div>
+              </div>
+
+              <!-- MORNING BRIEF / ALERTS -->
+              <div class="ds-card" style="background:var(--well);border-color:var(--border)">
+                <div class="ds-card__head">Placement Signals<span class="ds-pill ds-pill--warn" style="margin-left:auto">Review</span></div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="ds-alert ds-alert--warn">
+                    <div class="ds-alert__title">WFH Eligibility</div>
+                    Remote-capable advisors trend toward Developing–High Performer. Confirm ISP setup.
+                  </div>
+                  <div class="ds-alert ds-alert--info">
+                    <div class="ds-alert__title">Program Match</div>
+                    Tech Support advisors with CL-CISCO show +12pp accuracy on High Performer prediction.
+                  </div>
+                  <div class="ds-alert ds-alert--ok">
+                    <div class="ds-alert__title">Grade Signal</div>
+                    Job Grade 3+ at hire correlates with lower At-Risk probability across all programs.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ TAB 2: BATCH UPLOAD ═══ -->
+        <div id="tab-batch" class="tab-panel">
+
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:12px;flex-wrap:wrap">
+            <div>
+              <div class="t-eyebrow" style="margin-bottom:4px">Batch Scoring</div>
+              <p class="t-body-sm" style="color:var(--text-muted);margin:0">Upload a filled CSV to score multiple candidates at once.</p>
+            </div>
+            <button class="ds-btn ds-btn--default ds-btn--hard ds-btn--sm">⬇ Download CSV Template</button>
+          </div>
+
+          <div class="upload-zone" onclick="showBatch()" style="margin-bottom:20px">
+            <div class="upload-zone__icon">▤</div>
+            <div class="upload-zone__main">Drop CSV here or click to browse</div>
+            <div class="upload-zone__sub">Columns must match schema feature names · .csv only</div>
+          </div>
+
+          <!-- BATCH RESULTS (shown after upload) -->
+          <div id="batch-results" style="display:none">
+
+            <div style="margin-bottom:14px;font-size:13px;color:var(--text-muted)">
+              <strong style="color:var(--text)">312 candidates</strong> detected · scored in 4.2s
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-block metric-block--crit">
+                <div class="metric-block__label">▪ At-Risk</div>
+                <div class="metric-block__val">97</div>
+              </div>
+              <div class="metric-block metric-block--warn">
+                <div class="metric-block__label">▪ Developing</div>
+                <div class="metric-block__val">124</div>
+              </div>
+              <div class="metric-block metric-block--ok">
+                <div class="metric-block__label">▪ High Performer</div>
+                <div class="metric-block__val">91</div>
+              </div>
+            </div>
+
+            <div class="ds-table-wrap" style="margin-bottom:14px">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Predicted Tier</th>
+                    <th class="sort-col">P(At-Risk) ↓</th>
+                    <th>P(Developing)</th>
+                    <th>P(High Perf)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color:var(--text-subtle)">001</td>
+                    <td><span class="ds-pill ds-pill--crit"><span class="ds-dot ds-dot--crit"></span>At-Risk</span></td>
+                    <td><span class="td-num" style="color:var(--status-crit)">87.3%</span></td>
+                    <td><span class="td-num">10.1%</span></td>
+                    <td><span class="td-num">2.6%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">002</td>
+                    <td><span class="ds-pill ds-pill--crit"><span class="ds-dot ds-dot--crit"></span>At-Risk</span></td>
+                    <td><span class="td-num" style="color:var(--status-crit)">82.1%</span></td>
+                    <td><span class="td-num">14.3%</span></td>
+                    <td><span class="td-num">3.6%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">003</td>
+                    <td><span class="ds-pill ds-pill--crit"><span class="ds-dot ds-dot--crit"></span>At-Risk</span></td>
+                    <td><span class="td-num" style="color:var(--status-crit)">76.8%</span></td>
+                    <td><span class="td-num">19.2%</span></td>
+                    <td><span class="td-num">4.0%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">004</td>
+                    <td><span class="ds-pill ds-pill--warn"><span class="ds-dot ds-dot--warn"></span>Developing</span></td>
+                    <td><span class="td-num">31.4%</span></td>
+                    <td><span class="td-num" style="color:var(--status-warn)">54.1%</span></td>
+                    <td><span class="td-num">14.5%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">005</td>
+                    <td><span class="ds-pill ds-pill--warn"><span class="ds-dot ds-dot--warn"></span>Developing</span></td>
+                    <td><span class="td-num">28.9%</span></td>
+                    <td><span class="td-num" style="color:var(--status-warn)">58.3%</span></td>
+                    <td><span class="td-num">12.8%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">006</td>
+                    <td><span class="ds-pill ds-pill--ok"><span class="ds-dot ds-dot--ok"></span>High Performer</span></td>
+                    <td><span class="td-num">4.2%</span></td>
+                    <td><span class="td-num">18.7%</span></td>
+                    <td><span class="td-num" style="color:var(--status-ok)">77.1%</span></td>
+                  </tr>
+                  <tr>
+                    <td style="color:var(--text-subtle)">007</td>
+                    <td><span class="ds-pill ds-pill--ok"><span class="ds-dot ds-dot--ok"></span>High Performer</span></td>
+                    <td><span class="td-num">3.1%</span></td>
+                    <td><span class="td-num">15.4%</span></td>
+                    <td><span class="td-num" style="color:var(--status-ok)">81.5%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button class="ds-btn ds-btn--primary ds-btn--hard">⬇ Download Scored Results</button>
+          </div>
+        </div>
+
+      </div><!-- /tabs -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  /* clock */
+  function tick() {
+    const now = new Date();
+    const d = now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+    const t = now.toISOString().slice(11,16);
+    document.getElementById('clock').textContent = d + ' · ' + t + ' UTC';
+  }
+  tick(); setInterval(tick, 30000);
+
+  /* tab switching */
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* section toggle */
+  function toggleSection(head) {
+    head.closest('.ds-section').classList.toggle('open');
+  }
+
+  /* prediction result */
+  function showResult() {
+    document.getElementById('empty-card').style.display = 'none';
+    document.getElementById('result-card').style.display = 'block';
+    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* batch results */
+  function showBatch() {
+    document.getElementById('batch-results').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('batch-results').scrollIntoView({ behavior: 'smooth' });
+    }, 80);
+  }
+
+  /* theme toggle */
+  function toggleTheme(btn) {
+    const app = document.getElementById('app');
+    const isDark = app.getAttribute('data-theme') === 'dark';
+    app.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    btn.textContent = isDark ? '☀ Light' : '☾ Dark';
+  }
+</script>
+</body>
+</html>
