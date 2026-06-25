@@ -39,11 +39,18 @@ def evaluate_model(
     model_name: str = "model",
     shap_values=None,
     shap_X: pd.DataFrame = None,
+    class_labels: list = None,
 ) -> dict:
     """
     Full evaluation pass. Writes confusion matrix, calibration, SHAP, and
     threshold plots to reports/. Returns a metrics dict.
+
+    Args:
+        class_labels: Optional list of class label strings for plot axes/titles.
+                      If None, falls back to STAR_LABELS from config (backward compat).
     """
+    _labels = class_labels if class_labels is not None else STAR_LABELS
+
     REPORTS_DIR.mkdir(exist_ok=True)
 
     y_test = np.asarray(y_test, dtype=int)
@@ -83,11 +90,11 @@ def evaluate_model(
     )
 
     # Confusion matrix
-    _plot_confusion(y_test, y_pred, model_name)
+    _plot_confusion(y_test, y_pred, model_name, _labels)
 
     # Calibration
     if y_proba is not None:
-        _plot_calibration(y_test, y_proba, model_name)
+        _plot_calibration(y_test, y_proba, model_name, _labels)
 
         # At-risk probability head
         at_risk_proba = y_proba[:, AT_RISK_CLASS]
@@ -112,8 +119,8 @@ def evaluate_model(
 
 # ── Plots ─────────────────────────────────────────────────────────────────────
 
-def _plot_confusion(y_true, y_pred, model_name):
-    labels = STAR_LABELS[:N_CLASSES]
+def _plot_confusion(y_true, y_pred, model_name, class_labels=None):
+    labels = (class_labels if class_labels is not None else STAR_LABELS)[:N_CLASSES]
     cm = confusion_matrix(y_true, y_pred, labels=list(range(N_CLASSES)))
     fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
@@ -128,9 +135,10 @@ def _plot_confusion(y_true, y_pred, model_name):
     log.info(f"  Plot saved: {path.name}")
 
 
-def _plot_calibration(y_true, y_proba, model_name):
+def _plot_calibration(y_true, y_proba, model_name, class_labels=None):
+    _cal_labels = class_labels if class_labels is not None else STAR_LABELS
     fig, axes = plt.subplots(1, N_CLASSES, figsize=(4 * N_CLASSES, 4), sharey=True)
-    for i, (ax, lbl) in enumerate(zip(axes, STAR_LABELS)):
+    for i, (ax, lbl) in enumerate(zip(axes, _cal_labels)):
         bin_y = (y_true == i).astype(int)
         if bin_y.sum() < 10:
             ax.set_title(f'{lbl}\n(sparse)')
