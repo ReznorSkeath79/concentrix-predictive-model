@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KPI Predictive Model — Leadership Brief · AutoAlchemy</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Doto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ── TOKENS ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+:root {
+  --orange: #FF6B1A; --orange-2: #E85B10; --orange-ink: #B0470C;
+  --orange-soft: rgba(255,107,26,0.12); --orange-tint: rgba(255,107,26,0.07);
+  --paper-0: #FBF9F4; --paper-1: #F2EFE8; --paper-2: #E8E3D8; --paper-3: #DED8CB;
+  --ink: #1C1A16; --ink-2: #57534A; --ink-3: #8B8678;
+  --line: #DED8CB; --line-2: #E9E4D9;
+  --dk-0: #1C1A16; --dk-1: #242118; --dk-2: #2C2820; --dk-3: #38342A;
+  --dk-text-0: #F2EFE8; --dk-text-1: #C2BCAE; --dk-text-2: #8E8A7C;
+  --green: #5B7A3F; --amber: #B8801F; --red: #C0432C; --info: #4A6B7A;
+  /* semantic */
+  --bg: var(--paper-0); --bg-dot: rgba(28,26,22,0.13);
+  --surface: var(--paper-1); --surface-2: var(--paper-0); --surface-3: var(--paper-3);
+  --text: var(--ink); --text-muted: var(--ink-2); --text-subtle: var(--ink-3);
+  --border: var(--line); --border-soft: var(--line-2); --border-strong: var(--ink);
+  --accent: var(--orange); --accent-2: var(--orange-2); --accent-text: var(--orange-ink);
+  --accent-soft: var(--orange-soft); --accent-tint: var(--orange-tint); --on-accent: #FFF;
+  --focus-ring: var(--orange);
+  --status-ok: var(--green); --status-warn: var(--amber); --status-crit: var(--red); --status-info: var(--info);
+  --ok-tint: rgba(91,122,63,0.12); --warn-tint: rgba(184,128,31,0.12);
+  --crit-tint: rgba(192,67,44,0.12); --info-tint: rgba(74,107,122,0.12);
+  --well: var(--paper-2);
+  --shadow-hard: 4px 4px 0 0 var(--ink); --shadow-hard-sm: 3px 3px 0 0 var(--ink);
+  --shadow-pop: 6px 6px 0 0 var(--ink);
+  --r-sm: 2px; --r-md: 2px; --r-lg: 3px;
+  --pad-card: 20px;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Doto', monospace;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: var(--dk-0); --bg-dot: rgba(242,239,232,0.12);
+  --surface: var(--dk-1); --surface-2: var(--dk-0); --surface-3: var(--dk-3);
+  --text: var(--dk-text-0); --text-muted: var(--dk-text-1); --text-subtle: var(--dk-text-2);
+  --border: rgba(242,239,232,0.14); --border-soft: rgba(242,239,232,0.08); --border-strong: var(--dk-text-0);
+  --accent: #FF6B1A; --accent-2: #FF8038; --accent-text: #FF8A45;
+  --accent-soft: rgba(255,107,26,0.18); --accent-tint: rgba(255,107,26,0.10); --on-accent: #1C1A16;
+  --focus-ring: #FF8038;
+  --status-ok: #7FA85C; --status-warn: #D6A03E; --status-crit: #DB5C44; --status-info: #6E97A8;
+  --ok-tint: rgba(127,168,92,0.14); --warn-tint: rgba(214,160,62,0.14);
+  --crit-tint: rgba(219,92,68,0.14); --info-tint: rgba(110,151,168,0.14);
+  --well: var(--dk-2);
+  --shadow-hard: 4px 4px 0 0 #000; --shadow-hard-sm: 3px 3px 0 0 #000;
+  color-scheme: dark;
+}
+
+/* ── BASE ─────────────────────────────────────────────────── */
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-sans); font-size: 14px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; min-height: 100vh;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(var(--bg-dot) 1px, transparent 1.5px);
+  background-size: 6px 6px; opacity: 0.55;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, var(--accent-tint), transparent 60%);
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: var(--accent); color: var(--on-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--ink-3) transparent; }
+
+/* ── TYPE ─────────────────────────────────────────────────── */
+.t-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-subtle); }
+.t-page    { font-size: 28px; font-weight: 800; line-height: 1.15; letter-spacing: -0.015em; }
+.t-section { font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+.t-mono-label { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-subtle); }
+.t-body-sm { font-size: 13px; line-height: 1.55; }
+
+/* ── LOGO ─────────────────────────────────────────────────── */
+.ds-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; color: var(--text); }
+.ds-logo__mark { width: 22px; height: 22px; flex: none; background-image: radial-gradient(var(--text) 1px, transparent 1.5px); background-size: 4px 4px; -webkit-mask-image: radial-gradient(circle 50% 50% at 50% 50%, #000 38%, transparent 70%); mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%); }
+.ds-logo__pixel { font-family: var(--font-pixel); font-weight: 700; }
+
+/* ── PILLS & DOTS ─────────────────────────────────────────── */
+.ds-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--border-strong); border-radius: var(--r-sm); white-space: nowrap; color: var(--text-muted); }
+.ds-pill--hot  { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+.ds-pill--ok   { color: var(--status-ok); border-color: var(--status-ok); }
+.ds-pill--warn { color: var(--status-warn); border-color: var(--status-warn); }
+.ds-pill--crit { color: var(--status-crit); border-color: var(--status-crit); }
+.ds-pill--info { color: var(--status-info); border-color: var(--status-info); }
+.ds-dot { width: 7px; height: 7px; border-radius: 1px; flex: none; display: inline-block; background: var(--text-subtle); }
+.ds-dot--ok   { background: var(--status-ok); }
+.ds-dot--warn { background: var(--status-warn); }
+.ds-dot--crit { background: var(--status-crit); }
+.ds-dot--accent { background: var(--accent); }
+
+/* ── CARDS ────────────────────────────────────────────────── */
+.ds-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); }
+.ds-card--flat { border: 1px solid var(--border); box-shadow: none; }
+.ds-card--pop  { box-shadow: var(--shadow-pop); }
+.ds-card__head { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.ds-card__head::before { content: ""; width: 8px; height: 8px; background: var(--accent); flex: none; }
+
+/* ── KPI TILE ─────────────────────────────────────────────── */
+.ds-kpi { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); display: flex; flex-direction: column; gap: 8px; }
+.ds-kpi__label { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-subtle); }
+.ds-kpi__value { font-family: var(--font-pixel); font-size: 28px; font-weight: 700; line-height: 1; color: var(--text); }
+.ds-kpi--hero { background: var(--well); box-shadow: none; border-color: var(--border); }
+.ds-kpi--hero .ds-kpi__value { font-size: 52px; font-weight: 900; }
+.ds-kpi--accent .ds-kpi__value { color: var(--accent-text); }
+.ds-kpi__foot { display: flex; align-items: center; gap: 8px; }
+
+/* ── ALERT ────────────────────────────────────────────────── */
+.ds-alert { border: 1.5px solid; border-radius: var(--r-sm); padding: 14px 16px; font-size: 13px; }
+.ds-alert__title { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.ds-alert--ok { background: var(--ok-tint); border-color: var(--status-ok); }
+.ds-alert--ok .ds-alert__title { color: var(--status-ok); }
+.ds-alert--warn { background: var(--warn-tint); border-color: var(--status-warn); }
+.ds-alert--warn .ds-alert__title { color: var(--status-warn); }
+.ds-alert--crit { background: var(--crit-tint); border-color: var(--status-crit); }
+.ds-alert--crit .ds-alert__title { color: var(--status-crit); }
+.ds-alert--info { background: var(--info-tint); border-color: var(--status-info); }
+.ds-alert--info .ds-alert__title { color: var(--status-info); }
+
+/* ── BUTTON ───────────────────────────────────────────────── */
+.ds-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 12px; font-weight: 600; letter-spacing: 0.01em; padding: 9px 15px; min-height: 36px; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: var(--text); cursor: pointer; white-space: nowrap; transition: transform 110ms, box-shadow 110ms; }
+.ds-btn--primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ds-btn--hard { box-shadow: var(--shadow-hard-sm); }
+.ds-btn--hard:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--ink); }
+.ds-btn--hard:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
+
+/* ── TABLE ────────────────────────────────────────────────── */
+.tbl-wrap { border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: var(--well); }
+th { padding: 9px 14px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-subtle); border-bottom: 1.5px solid var(--border-strong); white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface-3); }
+.td-bold { font-weight: 600; color: var(--text); }
+.td-num  { font-family: var(--font-pixel); font-size: 13px; font-weight: 600; }
+.td-accent { font-family: var(--font-pixel); color: var(--accent-text); font-weight: 700; }
+
+/* ── SECTION NAV ──────────────────────────────────────────── */
+.section-nav { position: sticky; top: 56px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); z-index: 90; overflow-x: auto; scrollbar-width: none; }
+.section-nav::-webkit-scrollbar { display: none; }
+.section-nav__inner { display: flex; align-items: center; gap: 0; padding: 0 24px; min-width: max-content; }
+.nav-btn { padding: 11px 16px; background: none; border: none; border-bottom: 2.5px solid transparent; color: var(--text-subtle); font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: color 120ms, border-color 120ms; margin-bottom: -1.5px; }
+.nav-btn.active { color: var(--accent-text); border-bottom-color: var(--accent); }
+.nav-btn:hover:not(.active) { color: var(--text); }
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); position: sticky; top: 0; z-index: 100; }
+.topbar__right { display: flex; align-items: center; gap: 10px; }
+.theme-toggle { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-subtle); cursor: pointer; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); padding: 5px 10px; background: var(--surface); }
+.theme-toggle:hover { background: var(--surface-3); }
+.topbar__date { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; color: var(--text-subtle); }
+
+.page { max-width: 1120px; margin: 0 auto; padding: 36px 28px 80px; display: flex; flex-direction: column; gap: 48px; }
+
+/* ── SECTIONS ─────────────────────────────────────────────── */
+section { scroll-margin-top: 112px; }
+.section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.section-num { font-family: var(--font-pixel); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; color: var(--accent-text); }
+.section-title-row { margin-bottom: 24px; }
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero { background: var(--well); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 32px 28px; box-shadow: var(--shadow-pop); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--bg-dot) 1px, transparent 1.5px); background-size: 6px 6px; opacity: 0.5; pointer-events: none; }
+.hero > * { position: relative; z-index: 1; }
+.hero__sub  { font-size: 15px; color: var(--text-muted); line-height: 1.65; max-width: 72ch; margin: 10px 0 24px; }
+
+/* ── KPI RAIL ─────────────────────────────────────────────── */
+.kpi-rail { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr 1fr; gap: 12px; }
+
+/* ── STAT GRID ────────────────────────────────────────────── */
+.stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.stat-block { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow-hard-sm); }
+.stat-block__label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 6px; }
+.stat-block__val { font-family: var(--font-pixel); font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-block--ok .stat-block__val   { color: var(--status-ok); }
+.stat-block--warn .stat-block__val { color: var(--status-warn); }
+.stat-block--crit .stat-block__val { color: var(--status-crit); }
+.stat-block--accent .stat-block__val { color: var(--accent-text); }
+
+/* ── TWO-COL ──────────────────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.two-col--6040 { grid-template-columns: 1.5fr 1fr; }
+.two-col--7030 { grid-template-columns: 2fr 1fr; }
+
+/* ── TIER BADGE ───────────────────────────────────────────── */
+.tier-set { display: flex; flex-direction: column; gap: 10px; }
+.tier-row { display: flex; align-items: stretch; border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); }
+.tier-row__swatch { width: 6px; flex-shrink: 0; }
+.tier-row__body { flex: 1; padding: 14px 16px; background: var(--surface); }
+.tier-row__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.tier-row__name { font-size: 13px; font-weight: 700; }
+.tier-row__range { font-family: var(--font-pixel); font-size: 12px; color: var(--text-subtle); }
+.tier-row__desc { font-size: 12px; color: var(--text-muted); }
+
+/* ── FEATURE CATEGORIES ───────────────────────────────────── */
+.feat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.feat-block { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 14px; box-shadow: var(--shadow-hard-sm); }
+.feat-block__cat { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 8px; }
+.feat-block__items { display: flex; flex-direction: column; gap: 3px; }
+.feat-block__item { font-size: 11px; color: var(--text-muted); padding: 2px 0; border-bottom: 1px solid var(--border-soft); }
+.feat-block__item:last-child { border-bottom: none; }
+.feat-block__count { display: inline-flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent-text); font-family: var(--font-pixel); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 1px; margin-top: 8px; }
+
+/* ── PIPELINE STEPS ───────────────────────────────────────── */
+.pipeline { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; position: relative; }
+.pipeline::before { content: ""; position: absolute; top: 30px; left: 10%; right: 10%; height: 1.5px; background: var(--border); z-index: 0; }
+.pipe-step { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 16px 14px; box-shadow: var(--shadow-hard-sm); position: relative; z-index: 1; }
+.pipe-step__num { font-family: var(--font-pixel); font-size: 11px; font-weight: 700; color: var(--accent-text); margin-bottom: 8px; letter-spacing: 0.10em; }
+.pipe-step__title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.pipe-step__body { font-size: 11px; color: var(--text-muted); line-height: 1.55; }
+
+/* ── PROB BARS ────────────────────────────────────────────── */
+.metric-bar-row { display: flex; flex-direction: column; gap: 12px; }
+.m-bar { }
+.m-bar__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 12px; }
+.m-bar__label { font-weight: 600; color: var(--text); }
+.m-bar__val { font-family: var(--font-pixel); font-size: 14px; font-weight: 700; }
+.m-bar__track { height: 8px; background: var(--well); border: 1.5px solid var(--border); border-radius: 0; overflow: hidden; }
+.m-bar__fill { height: 100%; }
+.m-bar__sub { font-size: 11px; color: var(--text-subtle); margin-top: 4px; }
+
+/* ── COMPARISON BOX ───────────────────────────────────────── */
+.compare-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; }
+.compare-row__vs { display: flex; align-items: center; justify-content: center; font-family: var(--font-pixel); font-size: 16px; font-weight: 900; color: var(--text-subtle); padding: 0 4px; }
+.cmp-box { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--shadow-hard-sm); }
+.cmp-box--bad  { border-color: var(--status-crit); background: var(--crit-tint); }
+.cmp-box--good { border-color: var(--status-ok); background: var(--ok-tint); }
+.cmp-box__label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px; }
+.cmp-box--bad  .cmp-box__label { color: var(--status-crit); }
+.cmp-box--good .cmp-box__label { color: var(--status-ok); }
+.cmp-box__title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.cmp-box__bullets { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--text-muted); }
+.cmp-box__bullets li { list-style: none; display: flex; gap: 8px; }
+.cmp-box__bullets li::before { content: "▪"; color: var(--text-subtle); flex-shrink: 0; }
+
+/* ── RECOMMENDATION CARDS ─────────────────────────────────── */
+.rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rec-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--shadow-hard-sm); display: flex; gap: 14px; }
+.rec-card--high .rec-badge { background: var(--crit-tint); border-color: var(--status-crit); }
+.rec-card--medium .rec-badge { background: var(--warn-tint); border-color: var(--status-warn); }
+.rec-card--low .rec-badge { background: var(--info-tint); border-color: var(--status-info); }
+.rec-badge { width: 36px; height: 36px; border-radius: var(--r-md); border: 1.5px solid; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-pixel); font-size: 14px; font-weight: 900; }
+.rec-card--high .rec-badge   { color: var(--status-crit); }
+.rec-card--medium .rec-badge { color: var(--status-warn); }
+.rec-card--low .rec-badge    { color: var(--status-info); }
+.rec-body { flex: 1; }
+.rec-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.rec-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+.rec-effort { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-subtle); margin-top: 8px; }
+
+/* ── USE CASES ────────────────────────────────────────────── */
+.use-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+.use-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--shadow-hard-sm); }
+.use-card__num { font-family: var(--font-pixel); font-size: 22px; font-weight: 900; color: var(--accent-tint); line-height: 1; border: 1.5px solid var(--border); border-radius: var(--r-sm); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--accent-text); margin-bottom: 10px; }
+.use-card__title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.use-card__how { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.55; }
+.use-card__value { font-size: 11px; color: var(--text-subtle); border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px; display: flex; align-items: flex-start; gap: 6px; }
+.use-card__value::before { content: "↳"; color: var(--accent-text); flex-shrink: 0; }
+
+/* ── CODE BLOCK ───────────────────────────────────────────── */
+.code-block { background: var(--well); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 16px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--text); line-height: 1.7; overflow-x: auto; box-shadow: var(--shadow-hard-sm); }
+.code-block .cm { color: var(--text-subtle); }
+.code-block .kw { color: var(--accent-text); font-weight: 600; }
+.code-block .str { color: var(--status-ok); }
+
+/* ── DIVIDER ──────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 0 36px; }
+
+/* ── FOOTNOTE ─────────────────────────────────────────────── */
+.footnote { font-size: 11px; color: var(--text-subtle); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 12px; }
+
+/* ── PROGRESS RING ────────────────────────────────────────── */
+.auc-ring { display: flex; align-items: center; gap: 20px; }
+.ring-svg { flex-shrink: 0; }
+.ring-labels { display: flex; flex-direction: column; gap: 10px; }
+.ring-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.ring-item::before { content: ""; width: 10px; height: 3px; flex-shrink: 0; }
+.ring-item--val { font-family: var(--font-pixel); font-size: 14px; font-weight: 700; color: var(--text); }
+
+/* ── FEATURE IMPORTANCE ───────────────────────────────────── */
+.fi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.fi-label { width: 200px; flex-shrink: 0; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fi-track { flex: 1; height: 7px; background: var(--well); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
+.fi-fill  { height: 100%; background: var(--accent); border-radius: 0; }
+.fi-pct { width: 36px; text-align: right; font-family: var(--font-pixel); font-size: 11px; color: var(--text-subtle); }
+.fi-dir { width: 60px; flex-shrink: 0; }
+
+@media (max-width: 860px) {
+  .kpi-rail { grid-template-columns: repeat(3,1fr); }
+  .two-col, .two-col--6040, .two-col--7030 { grid-template-columns: 1fr; }
+  .feat-grid { grid-template-columns: repeat(2,1fr); }
+  .pipeline { grid-template-columns: repeat(2,1fr); }
+  .rec-grid, .use-grid, .stat-grid { grid-template-columns: 1fr; }
+  .compare-row { grid-template-columns: 1fr; }
+  .compare-row__vs { display: none; }
+}
+</style>
+</head>
+
+<body id="app" data-theme="light">
+
+<!-- ════════════ TOPBAR ════════════ -->
+<header class="topbar">
+  <span class="ds-logo">
+    <span class="ds-logo__mark"></span>
+    Auto<span class="ds-logo__pixel">Alchemy</span>
+  </span>
+  <div class="topbar__right">
+    <span class="topbar__date">26 JUN 2026</span>
+    <span class="ds-pill ds-pill--ok"><span class="ds-dot ds-dot--ok"></span>Phase 2 Complete</span>
+    <button class="theme-toggle" onclick="toggleTheme(this)">☀ Light</button>
+    <button class="ds-btn ds-btn--hard" onclick="window.print()">⬇ Export</button>
+  </div>
+</header>
+
+<!-- ════════════ SECTION NAV ════════════ -->
+<nav class="section-nav">
+  <div class="section-nav__inner">
+    <button class="nav-btn active" onclick="scrollTo('exec')">Executive Summary</button>
+    <button class="nav-btn" onclick="scrollTo('problem')">The Problem</button>
+    <button class="nav-btn" onclick="scrollTo('data')">Data Used</button>
+    <button class="nav-btn" onclick="scrollTo('model')">Model Build</button>
+    <button class="nav-btn" onclick="scrollTo('performance')">Performance</button>
+    <button class="nav-btn" onclick="scrollTo('usage')">How to Use</button>
+    <button class="nav-btn" onclick="scrollTo('recs')">Recommendations</button>
+    <button class="nav-btn" onclick="scrollTo('techref')">Technical Ref</button>
+  </div>
+</nav>
+
+<!-- ════════════ MAIN ════════════ -->
+<div class="page">
+
+  <!-- ═══ 0. HERO ═══ -->
+  <div class="hero">
+    <div class="t-eyebrow" style="margin-bottom:8px">Concentrix PH · Advisor Performance Intelligence</div>
+    <h1 class="t-page">KPI Predictive Model<br>Leadership Brief.</h1>
+    <p class="hero__sub">A machine learning model that predicts an advisor's performance tier — At-Risk, Developing, or High Performer — using only pre-hire data available at the point of recruitment. Built on 41,717 labeled agents. Delivers a +25 percentage point lift over guessing.</p>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span class="ds-pill ds-pill--ok"><span class="ds-dot ds-dot--ok"></span>Phase 2 Complete</span>
+      <span class="ds-pill">LightGBM · 3-Class Multiclass</span>
+      <span class="ds-pill">Weighted PTG Terciles</span>
+      <span class="ds-pill ds-pill--hot">Scoring App Live</span>
+    </div>
+  </div>
+
+  <!-- ═══ 1. EXECUTIVE SUMMARY ═══ -->
+  <section id="exec">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">01</span><span class="t-eyebrow">Executive Summary</span></div>
+      <h2 class="t-section">Bottom line up front.</h2>
+    </div>
+
+    <div class="kpi-rail" style="margin-bottom:20px">
+      <div class="ds-kpi ds-kpi--hero ds-kpi--accent">
+        <span class="ds-kpi__label">Model Accuracy</span>
+        <span class="ds-kpi__value">58.3<span style="font-size:0.38em;color:var(--text-subtle);margin-left:2px">%</span></span>
+        <div class="ds-kpi__foot"><span class="ds-pill ds-pill--hot"><span class="ds-dot ds-dot--accent"></span>+25pp vs baseline</span></div>
+      </div>
+      <div class="ds-kpi">
+        <span class="ds-kpi__label">Macro AUC</span>
+        <span class="ds-kpi__value">0.762</span>
+        <div class="ds-kpi__foot"><span class="ds-pill ds-pill--ok">Strong separation</span></div>
+      </div>
+      <div class="ds-kpi">
+        <span class="ds-kpi__label">Labeled Agents</span>
+        <span class="ds-kpi__value">41.7<span style="font-size:0.5em;color:var(--text-subtle)">k</span></span>
+        <div class="ds-kpi__foot"><span class="ds-pill">CDM · 64.1%</span></div>
+      </div>
+      <div class="ds-kpi">
+        <span class="ds-kpi__label">Features</span>
+        <span class="ds-kpi__value">122</span>
+        <div class="ds-kpi__foot"><span class="ds-pill">Pre-hire only</span></div>
+      </div>
+      <div class="ds-kpi">
+        <span class="ds-kpi__label">Random Baseline</span>
+        <span class="ds-kpi__value">33.3<span style="font-size:0.5em;color:var(--text-subtle)">%</span></span>
+        <div class="ds-kpi__foot"><span class="ds-pill ds-pill--warn">Equal 3-class dist.</span></div>
+      </div>
+    </div>
+
+    <div class="two-col two-col--6040" style="margin-bottom:20px">
+      <div class="ds-card">
+        <div class="ds-card__head">What the model predicts</div>
+        <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:16px">The model classifies every candidate into one of three KPI performance tiers based exclusively on pre-hire data — no post-hire metrics, no STAR ratings.</p>
+        <div class="tier-set">
+          <div class="tier-row">
+            <div class="tier-row__swatch" style="background:var(--status-crit)"></div>
+            <div class="tier-row__body">
+              <div class="tier-row__head"><span class="tier-row__name" style="color:var(--status-crit)">At-Risk</span><span class="tier-row__range">PTG &lt; 91.7%</span></div>
+              <div class="tier-row__desc">Likely to struggle — flag for closer onboarding support</div>
+            </div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-row__swatch" style="background:var(--status-warn)"></div>
+            <div class="tier-row__body">
+              <div class="tier-row__head"><span class="tier-row__name" style="color:var(--status-warn)">Developing</span><span class="tier-row__range">91.7% – 103%</span></div>
+              <div class="tier-row__desc">Middle performers — will improve with coaching investment</div>
+            </div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-row__swatch" style="background:var(--status-ok)"></div>
+            <div class="tier-row__body">
+              <div class="tier-row__head"><span class="tier-row__name" style="color:var(--status-ok)">High Performer</span><span class="tier-row__range">PTG &gt; 103%</span></div>
+              <div class="tier-row__desc">Top performers — prioritize for offer and strategic placement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="ds-alert ds-alert--ok">
+          <div class="ds-alert__title">On 312 candidates</div>
+          The model makes ~78 more correct placement decisions than chance alone — every batch scored saves coaching hours and reduces first-90-day attrition.
+        </div>
+        <div class="ds-alert ds-alert--info">
+          <div class="ds-alert__title">Signal, not decision</div>
+          This is a prioritization tool. It ranks risk and opportunity — it does not replace recruiter judgment or hiring approval.
+        </div>
+        <div class="ds-alert ds-alert--warn">
+          <div class="ds-alert__title">At-Risk ≠ Reject</div>
+          An At-Risk prediction triggers targeted onboarding support — Day 30/60/90 check-ins, stronger buddy assignment, program placement review.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 2. THE PROBLEM ═══ -->
+  <section id="problem">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">02</span><span class="t-eyebrow">The Problem We Solved</span></div>
+      <h2 class="t-section">Why we scrapped STAR and switched to Weighted PTG.</h2>
+    </div>
+
+    <div class="compare-row" style="margin-bottom:20px">
+      <div class="cmp-box cmp-box--bad">
+        <div class="cmp-box__label">Rejected Approach</div>
+        <div class="cmp-box__title">STAR Rating</div>
+        <ul class="cmp-box__bullets">
+          <li>Forced bell-curve distribution — top ~10% get STAR 5 regardless of absolute output</li>
+          <li>Bottom ~50% always receive lowest rating — even if entire team improved 20% YoY</li>
+          <li>Model would learn "who is ranked lowest on their team" — not who performs poorly</li>
+          <li>Structurally useless for pre-hire prediction — STAR is a rank, not a measure</li>
+        </ul>
+      </div>
+      <div class="compare-row__vs">VS</div>
+      <div class="cmp-box cmp-box--good">
+        <div class="cmp-box__label">Chosen Approach</div>
+        <div class="cmp-box__title">Weighted PTG (Percentage to Goal)</div>
+        <ul class="cmp-box__bullets">
+          <li>Composite KPI score — weighted aggregate of quality, efficiency, adherence, program KPIs</li>
+          <li>Measured in absolute terms — 95% PTG means the same across every team and program</li>
+          <li>Not forced-distributed — reflects actual performance shape</li>
+          <li>Tercile-based tier labels produce naturally balanced training classes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ds-card ds-card--flat">
+      <div class="ds-card__head">Cutpoint Derivation</div>
+      <div class="two-col">
+        <div>
+          <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:12px">Rather than predicting the raw PTG number, we converted it into tercile-based tier labels. This produces naturally balanced classes (~13,906 agents per tier) — critical for fair model training.</p>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Percentile</th><th>PTG Value</th><th>Tier Split</th></tr></thead>
+              <tbody>
+                <tr><td class="td-bold">p33</td><td class="td-num">91.66%</td><td>Below → <span class="ds-pill ds-pill--crit">At-Risk</span></td></tr>
+                <tr><td class="td-bold">p67</td><td class="td-num">102.98%</td><td>Above → <span class="ds-pill ds-pill--ok">High Performer</span></td></tr>
+                <tr><td class="td-bold">Between</td><td class="td-num">91.66–102.98%</td><td><span class="ds-pill ds-pill--warn">Developing</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stat-grid" style="grid-template-columns:1fr;">
+          <div class="stat-block">
+            <div class="stat-block__label">Agents per tier (approx)</div>
+            <div class="stat-block__val">13,906</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block__label">Total labeled agents</div>
+            <div class="stat-block__val">41,717</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block__label">Balance (equal class)</div>
+            <div class="stat-block__val stat-block--ok">33.3%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 3. DATA ═══ -->
+  <section id="data">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">03</span><span class="t-eyebrow">Data Used</span></div>
+      <h2 class="t-section">41,717 agents. 122 pre-hire features. One composite KPI target.</h2>
+    </div>
+
+    <div class="two-col two-col--6040" style="margin-bottom:20px">
+      <div class="ds-card">
+        <div class="ds-card__head">Source Dataset</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Dataset</th><th>Records</th><th>Has PTG?</th><th>Used For</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="td-bold">CDM</td>
+                <td class="td-num">65,039</td>
+                <td><span class="ds-pill ds-pill--ok">✓ Yes</span></td>
+                <td>Model training</td>
+              </tr>
+              <tr>
+                <td class="td-bold">CDM (labeled)</td>
+                <td class="td-num td-accent">41,717</td>
+                <td><span class="ds-pill ds-pill--ok">PTG recorded</span></td>
+                <td>Final training set</td>
+              </tr>
+              <tr>
+                <td class="td-bold">CDM (unlabeled)</td>
+                <td class="td-num">23,322</td>
+                <td><span class="ds-pill ds-pill--crit">No PTG</span></td>
+                <td>Excluded (no target)</td>
+              </tr>
+              <tr>
+                <td class="td-bold">SDD1</td>
+                <td>Additional</td>
+                <td><span class="ds-pill ds-pill--crit">No PTG</span></td>
+                <td>Not used</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="footnote">35.9% of CDM agents had no PTG value — excluded from training. These represent either inactive accounts or agents without a stable performance record.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="ds-kpi">
+          <span class="ds-kpi__label">Train / Test Split</span>
+          <span class="ds-kpi__value">80<span style="font-size:0.5em;color:var(--text-subtle)">%</span></span>
+          <div class="ds-kpi__foot"><span class="ds-pill">33,374 agents training</span></div>
+        </div>
+        <div class="ds-kpi">
+          <span class="ds-kpi__label">Held-Out Test Set</span>
+          <span class="ds-kpi__value">8,343</span>
+          <div class="ds-kpi__foot"><span class="ds-pill ds-pill--ok">Never used in training</span></div>
+        </div>
+        <div class="ds-alert ds-alert--info">
+          <div class="ds-alert__title">Leakage Prevention</div>
+          All accuracy metrics come from the held-out 20% only. The model never saw these rows during training.
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card" style="margin-bottom:16px">
+      <div class="ds-card__head">Feature Categories — 122 Pre-Hire Variables</div>
+      <div class="feat-grid">
+        <div class="feat-block">
+          <div class="feat-block__cat">Certifications &amp; Licences</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">CL-PRC · CL-CISCO</span>
+            <span class="feat-block__item">CL-Salesforce · CL-AWS</span>
+            <span class="feat-block__item">CL-Azure · CL-GCP</span>
+            <span class="feat-block__item">CL-ITIL · CL-Six Sigma</span>
+            <span class="feat-block__item">+ others</span>
+          </div>
+          <span class="feat-block__count">~20 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Support Type Experience</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">S-Voice · S-Non-Voice</span>
+            <span class="feat-block__item">S-Chat · S-Email</span>
+            <span class="feat-block__item">S-Tech Support</span>
+          </div>
+          <span class="feat-block__count">~8 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Channel Experience</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">ChS-Inbound</span>
+            <span class="feat-block__item">ChS-Outbound</span>
+            <span class="feat-block__item">ChS-Blended</span>
+          </div>
+          <span class="feat-block__count">~6 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Leadership Background</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">L-Team Lead</span>
+            <span class="feat-block__item">L-Supervisor</span>
+            <span class="feat-block__item">L-Manager</span>
+          </div>
+          <span class="feat-block__count">~5 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Industry Verticals</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">V-Financial · V-Telco</span>
+            <span class="feat-block__item">V-Healthcare · V-Retail</span>
+            <span class="feat-block__item">+ others</span>
+          </div>
+          <span class="feat-block__count">~10 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Transportation</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">Tr-Own Vehicle</span>
+            <span class="feat-block__item">Tr-Public · Tr-Motorcycle</span>
+          </div>
+          <span class="feat-block__count">~4 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">ISP &amp; Connectivity</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">ISP flags</span>
+            <span class="feat-block__item">Connection type</span>
+            <span class="feat-block__item">WFH eligibility</span>
+          </div>
+          <span class="feat-block__count">~5 features</span>
+        </div>
+        <div class="feat-block">
+          <div class="feat-block__cat">Demographics &amp; Org Context</div>
+          <div class="feat-block__items">
+            <span class="feat-block__item">GC Region · Province</span>
+            <span class="feat-block__item">Client · Program · Site</span>
+            <span class="feat-block__item">Mgmt Level · Job Grade</span>
+            <span class="feat-block__item">WFH Status · Distance</span>
+          </div>
+          <span class="feat-block__count">~64 features</span>
+        </div>
+      </div>
+      <p class="footnote" style="margin-top:16px">All features are binary flags (0 = No, 1 = Yes) or categorical. No post-hire data. No tenure. No performance history. No STAR ratings.</p>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 4. MODEL BUILD ═══ -->
+  <section id="model">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">04</span><span class="t-eyebrow">How the Model Was Built</span></div>
+      <h2 class="t-section">LightGBM. Bayesian tuning. Cross-validated encoding. Zero leakage.</h2>
+    </div>
+
+    <div class="pipeline" style="margin-bottom:20px">
+      <div class="pipe-step">
+        <div class="pipe-step__num">STEP 01</div>
+        <div class="pipe-step__title">Data Prep</div>
+        <div class="pipe-step__body">CDM extract → filter to labeled 41,717 → assign tercile tiers → 80/20 train-test split</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-step__num">STEP 02</div>
+        <div class="pipe-step__title">Encoding</div>
+        <div class="pipe-step__body">FoldTargetEncoder on high-cardinality fields (Client, Program, Site). Binary flags pass through. NaN handled natively.</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-step__num">STEP 03</div>
+        <div class="pipe-step__title">Hyperparameter Search</div>
+        <div class="pipe-step__body">Optuna Bayesian optimization · 50 trials · 5-fold CV on train set · maximize macro AUC</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-step__num">STEP 04</div>
+        <div class="pipe-step__title">Final Evaluation</div>
+        <div class="pipe-step__body">Best params → retrain on full 80% → evaluate on held-out 20% → save joblib + schema</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:16px">
+      <div class="ds-card">
+        <div class="ds-card__head">Algorithm — LightGBM</div>
+        <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:14px">Gradient boosting decision tree ensemble. Industry standard for tabular classification.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Property</th><th>How it helps</th></tr></thead>
+            <tbody>
+              <tr><td class="td-bold">Native NaN handling</td><td>Candidates with unknown fields are scored without imputation</td></tr>
+              <tr><td class="td-bold">Mixed feature types</td><td>Handles binary, numeric, and categorical in one model</td></tr>
+              <tr><td class="td-bold">Probability outputs</td><td>Returns P(At-Risk), P(Developing), P(High Performer)</td></tr>
+              <tr><td class="td-bold">Speed</td><td>Full training in minutes on 40k+ records</td></tr>
+              <tr><td class="td-bold">No scaling needed</td><td>Tree-based — feature magnitudes don't matter</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card__head">Leakage Guards</div>
+        <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:14px">These fields were explicitly excluded — they're either post-hire or would create circular logic:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="ds-alert ds-alert--crit">
+            <div class="ds-alert__title">Excluded — Direct Leakage</div>
+            Latest Weighted PTG (the target itself) · STAR rating (derived from PTG rankings)
+          </div>
+          <div class="ds-alert ds-alert--warn">
+            <div class="ds-alert__title">Excluded — Post-Hire Data</div>
+            Tenure · Performance history · Active-period KPI rows · Manager assignment
+          </div>
+          <div class="ds-alert ds-alert--ok">
+            <div class="ds-alert__title">FoldTargetEncoder Safety</div>
+            Out-of-fold statistics used for Client/Program/Site encoding — encoder never sees the current row's label during training
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card ds-card--flat">
+      <div class="ds-card__head">Hyperparameter Optimization — Optuna</div>
+      <div class="two-col">
+        <div>
+          <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:14px">Bayesian optimization searches smarter than grid search — it learns which regions of the parameter space are promising and focuses trials there.</p>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Config</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td class="td-bold">Optimizer</td><td>Optuna (TPE sampler)</td></tr>
+                <tr><td class="td-bold">Trials</td><td class="td-num">50</td></tr>
+                <tr><td class="td-bold">CV folds</td><td class="td-num">5</td></tr>
+                <tr><td class="td-bold">Metric</td><td>Macro AUC (OVR)</td></tr>
+                <tr><td class="td-bold">Search space</td><td>num_leaves, learning_rate, max_depth, min_child_samples, subsample, colsample_bytree, reg_alpha, reg_lambda</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p class="t-body-sm" style="color:var(--text-muted);margin-bottom:12px">Each trial is fully cross-validated — the chosen parameters generalize reliably and are not overfit to a single train/test split.</p>
+          <div class="ds-alert ds-alert--info">
+            <div class="ds-alert__title">Why 5-fold CV?</div>
+            5 folds means each fold uses 80% of training data to fit and 20% to validate. 50 trials × 5 folds = 250 model fits total. The final best-params model is trained on the full 80% training set once, then evaluated on the held-out 20%.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 5. PERFORMANCE ═══ -->
+  <section id="performance">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">05</span><span class="t-eyebrow">Model Performance</span></div>
+      <h2 class="t-section">AUC 0.762. +25pp lift. Strongest on At-Risk identification.</h2>
+    </div>
+
+    <div class="two-col two-col--6040" style="margin-bottom:20px">
+      <div class="ds-card">
+        <div class="ds-card__head">Summary Metrics</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>Value</th><th>Interpretation</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="td-bold">AUC (Macro)</td>
+                <td><span class="td-num td-accent">0.762</span></td>
+                <td>Strong discriminative ability across all 3 tiers</td>
+              </tr>
+              <tr>
+                <td class="td-bold">Accuracy</td>
+                <td><span class="td-num td-accent">58.3%</span></td>
+                <td>Correctly classifies 58.3% of candidates</td>
+              </tr>
+              <tr>
+                <td class="td-bold">Majority-class Baseline</td>
+                <td class="td-num" style="color:var(--text-subtle)">33.3%</td>
+                <td>Random guessing with equal class sizes</td>
+              </tr>
+              <tr>
+                <td class="td-bold">Lift vs Baseline</td>
+                <td><span class="td-num" style="color:var(--status-ok)">+25.0pp</span></td>
+                <td>What the model adds over pure chance</td>
+              </tr>
+              <tr>
+                <td class="td-bold">Macro F1</td>
+                <td class="td-num">0.582</td>
+                <td>Balanced precision + recall across all tiers</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="ds-card" style="flex:1">
+          <div class="ds-card__head">AUC Explained</div>
+          <div class="metric-bar-row">
+            <div class="m-bar">
+              <div class="m-bar__head"><span class="m-bar__label">This model (0.762)</span><span class="m-bar__val" style="color:var(--accent-text)">76.2%</span></div>
+              <div class="m-bar__track"><div class="m-bar__fill" style="width:76.2%;background:var(--accent)"></div></div>
+            </div>
+            <div class="m-bar">
+              <div class="m-bar__head"><span class="m-bar__label">Random guess (0.500)</span><span class="m-bar__val" style="color:var(--text-subtle)">50.0%</span></div>
+              <div class="m-bar__track"><div class="m-bar__fill" style="width:50%;background:var(--border)"></div></div>
+            </div>
+            <div class="m-bar">
+              <div class="m-bar__head"><span class="m-bar__label">Perfect model (1.000)</span><span class="m-bar__val" style="color:var(--status-ok)">100%</span></div>
+              <div class="m-bar__track"><div class="m-bar__fill" style="width:100%;background:var(--status-ok)"></div></div>
+              <div class="m-bar__sub">0.762 is considered strong for pre-hire prediction where signal is inherently noisy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card" style="margin-bottom:16px">
+      <div class="ds-card__head">Known Predictors — Feature Importance Signals</div>
+      <div class="two-col">
+        <div>
+          <div class="fi-row" style="margin-bottom:14px">
+            <span class="fi-label">Management Level at hire</span>
+            <div class="fi-track"><div class="fi-fill" style="width:92%"></div></div>
+            <span class="fi-pct">92%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Higher → better</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">CL-PRC (Licensed Professional)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:78%"></div></div>
+            <span class="fi-pct">78%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Program / Client placement</span>
+            <div class="fi-track"><div class="fi-fill" style="width:74%"></div></div>
+            <span class="fi-pct">74%</span>
+            <span class="fi-dir"><span class="ds-pill" style="font-size:9px">± Mixed</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Work-At-Home Status</span>
+            <div class="fi-track"><div class="fi-fill" style="width:68%"></div></div>
+            <span class="fi-pct">68%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">WFH positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">CL-CISCO / CL-Salesforce</span>
+            <div class="fi-track"><div class="fi-fill" style="width:62%"></div></div>
+            <span class="fi-pct">62%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Job Grade at hire</span>
+            <div class="fi-track"><div class="fi-fill" style="width:55%;background:var(--status-crit)"></div></div>
+            <span class="fi-pct">55%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--crit" style="font-size:9px">Low → At-Risk</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Site Distance (km)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:38%;background:var(--status-warn)"></div></div>
+            <span class="fi-pct">38%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--warn" style="font-size:9px">− Slight neg.</span></span>
+          </div>
+          <p class="footnote" style="margin-top:12px">Relative importance — higher bar = stronger signal. Derived from model feature importance; exact values subject to SHAP re-run.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="ds-alert ds-alert--info">
+            <div class="ds-alert__title">Most Predictive Single Feature</div>
+            Management Level at hire is the dominant signal. Advisors with any prior leadership role show significantly lower At-Risk probability.
+          </div>
+          <div class="ds-alert ds-alert--warn">
+            <div class="ds-alert__title">SHAP Re-run Needed</div>
+            The predictor rankings above are from STAR-era models. A dedicated SHAP analysis on the KPI model is Recommendation #1 — the rankings may shift.
+          </div>
+          <div class="ds-alert ds-alert--ok">
+            <div class="ds-alert__title">Probability Output Example</div>
+            <div style="font-family:var(--font-pixel);font-size:12px;margin-top:6px;letter-spacing:0.04em">P(At-Risk) = 18.4%<br>P(Developing) = 54.1%<br>P(High Perf) = 27.5%</div>
+            <div style="margin-top:6px">→ Tier: <span class="ds-pill ds-pill--warn">Developing</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card ds-card--flat">
+      <div class="ds-card__head">What the Model Cannot Do</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+        <div class="ds-alert ds-alert--warn">
+          <div class="ds-alert__title">No STAR prediction</div>
+          STAR is a forced rank. By design, this model does not predict it — and STAR is not a valid performance target.
+        </div>
+        <div class="ds-alert ds-alert--warn">
+          <div class="ds-alert__title">No manager quality signal</div>
+          Post-hire factors — team dynamics, manager skill, training quality — are out of scope. The model sees only pre-hire data.
+        </div>
+        <div class="ds-alert ds-alert--warn">
+          <div class="ds-alert__title">Probabilistic, not deterministic</div>
+          A "Developing" prediction comes with uncertainty. P(At-Risk) = 35% and P(At-Risk) = 70% both label "At-Risk" but carry very different confidence.
+        </div>
+        <div class="ds-alert ds-alert--warn">
+          <div class="ds-alert__title">Not a hiring decision engine</div>
+          This is a risk-ranking tool. Recruiter judgment, structured interviews, and hiring approval remain required.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 6. HOW TO USE ═══ -->
+  <section id="usage">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">06</span><span class="t-eyebrow">How to Use</span></div>
+      <h2 class="t-section">Two modes. Five use cases. One command to launch.</h2>
+    </div>
+
+    <div class="two-col" style="margin-bottom:20px">
+      <div class="ds-card">
+        <div class="ds-card__head">Mode 1 — Score Candidate (Form)</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">1</span>
+            <span style="color:var(--text-muted)">Open app → tab <strong style="color:var(--text)">"Score Candidate"</strong></span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">2</span>
+            <span style="color:var(--text-muted)">Fill in candidate's pre-hire details across the expandable sections</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">3</span>
+            <span style="color:var(--text-muted)">Click <strong style="color:var(--text)">"Predict KPI Tier"</strong> → review tier badge + probability bars</span>
+          </div>
+        </div>
+        <div class="ds-alert ds-alert--info">
+          <div class="ds-alert__title">Best for</div>
+          Individual screening · Interview prep · High-stakes placement decisions
+        </div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card__head">Mode 2 — Batch Upload (CSV)</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">1</span>
+            <span style="color:var(--text-muted)">Open app → tab <strong style="color:var(--text)">"Batch Upload"</strong> → Download CSV Template</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">2</span>
+            <span style="color:var(--text-muted)">Fill one row per candidate · Upload completed CSV</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;font-size:13px">
+            <span class="ds-dot ds-dot--accent" style="margin-top:4px;width:14px;height:14px;border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--on-accent);background:var(--accent)">3</span>
+            <span style="color:var(--text-muted)">Results sorted by P(At-Risk) desc → <strong style="color:var(--text)">Download Scored Results</strong></span>
+          </div>
+        </div>
+        <div class="ds-alert ds-alert--info">
+          <div class="ds-alert__title">Best for</div>
+          End-of-week recruitment batches · Program-level planning · Roster reviews
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card ds-card--flat" style="margin-bottom:16px">
+      <div class="ds-card__head">Launch Command</div>
+      <div class="code-block">
+<span class="cm"># From the project root</span>
+<span class="kw">cd</span> <span class="str">"E:\work\concentrix\PredictiveModel"</span>
+streamlit run app/scoring_app.py
+<span class="cm"># → Opens at http://localhost:8501</span>
+      </div>
+    </div>
+
+    <div class="ds-card">
+      <div class="ds-card__head">Recommended Use Cases</div>
+      <div class="use-grid">
+        <div class="use-card">
+          <div class="use-card__num">01</div>
+          <div class="use-card__title">Pre-Hire Screening</div>
+          <div class="use-card__how">Batch score all applicants in final-stage pipeline before scheduling interviews.</div>
+          <div class="use-card__value">Prioritize At-Risk candidates for deeper structured interviews; fast-track High Performer predictions to offer</div>
+        </div>
+        <div class="use-card">
+          <div class="use-card__num">02</div>
+          <div class="use-card__title">Program Placement</div>
+          <div class="use-card__how">Score candidate against multiple program contexts by swapping the Client/Site field.</div>
+          <div class="use-card__value">Match candidate to program where P(High Performer) is highest — optimization over guessing</div>
+        </div>
+        <div class="use-card">
+          <div class="use-card__num">03</div>
+          <div class="use-card__title">Probation Early Warning</div>
+          <div class="use-card__how">Score newly onboarded advisors against their pre-hire profile on Day 1.</div>
+          <div class="use-card__value">Flag At-Risk cohort for closer onboarding support before the first STAR review cycle</div>
+        </div>
+        <div class="use-card">
+          <div class="use-card__num">04</div>
+          <div class="use-card__title">Recruitment Planning</div>
+          <div class="use-card__how">Batch score full applicant pool before scheduling. Rank by P(High Performer).</div>
+          <div class="use-card__value">Optimize offer throughput — fewer low-probability-of-success offers per headcount target</div>
+        </div>
+        <div class="use-card">
+          <div class="use-card__num">05</div>
+          <div class="use-card__title">TL Coaching Prioritization</div>
+          <div class="use-card__how">Identify predicted At-Risk agents still in probation for TL coaching allocation.</div>
+          <div class="use-card__value">Allocate coaching hours where intervention probability is highest — not where agents are loudest</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 7. RECOMMENDATIONS ═══ -->
+  <section id="recs">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">07</span><span class="t-eyebrow">Model Improvement Recommendations</span></div>
+      <h2 class="t-section">10 improvements ordered by impact-to-effort ratio.</h2>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      <span class="ds-pill ds-pill--crit"><span class="ds-dot ds-dot--crit"></span>High Priority</span>
+      <span style="font-size:12px;color:var(--text-subtle)">Do these first — low effort, high accuracy gain</span>
+      <span style="flex:1"></span>
+      <span class="ds-pill ds-pill--warn">Medium</span>
+      <span class="ds-pill ds-pill--info">Lower Priority</span>
+    </div>
+
+    <div class="rec-grid" style="margin-bottom:12px">
+      <div class="rec-card rec-card--high">
+        <div class="rec-badge">01</div>
+        <div class="rec-body">
+          <div class="rec-title">SHAP Feature Importance on KPI Model</div>
+          <div class="rec-desc">Run SHAP analysis specifically on the KPI model — the current predictor rankings are from deprecated STAR-era models and may not reflect KPI model behavior.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--ok"></span>Effort: 1–2 days · SHAP already in codebase</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--high">
+        <div class="rec-badge">02</div>
+        <div class="rec-body">
+          <div class="rec-title">Capture the Unlabeled 35.9%</div>
+          <div class="rec-desc">Investigate why 23,322 CDM agents have no PTG value. If they're tenured agents with stable performance, label and include them — more data = more robust model for edge-case demographics.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--warn"></span>Effort: Medium · requires data team coordination</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--high">
+        <div class="rec-badge">03</div>
+        <div class="rec-body">
+          <div class="rec-title">Probability Calibration</div>
+          <div class="rec-desc">Apply isotonic regression or Platt scaling to calibrate probability outputs. LightGBM probabilities are directionally correct but tend to be overconfident — "P(At-Risk) = 70%" should mean exactly 70%.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--ok"></span>Effort: 1 day · scikit-learn CalibratedClassifierCV</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--medium">
+        <div class="rec-badge">04</div>
+        <div class="rec-body">
+          <div class="rec-title">Program-Specific Sub-Models</div>
+          <div class="rec-desc">Train separate models per high-volume program (Tech Support, Collections, Customer Service). A "High Performer" in Collections looks very different from one in Tech Support.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--warn"></span>Effort: 2–3 weeks · needs ≥500 agents per class per program</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--medium">
+        <div class="rec-badge">05</div>
+        <div class="rec-body">
+          <div class="rec-title">Add SDD1 Data When PTG Available</div>
+          <div class="rec-desc">If the data team backfills Weighted PTG into SDD1, incorporate it into the training set. More diverse training data improves generalization for newer programs and sites.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--ok"></span>Effort: Low once data is available</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--medium">
+        <div class="rec-badge">06</div>
+        <div class="rec-body">
+          <div class="rec-title">6-Month Retraining Cadence</div>
+          <div class="rec-desc">Retrain the model every 6 months using the latest CDM extract. Hiring profiles, program mixes, and performance standards evolve — a 2025 model drifts as the business changes.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--ok"></span>Effort: 1–2 days to operationalize as scheduled job</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--low">
+        <div class="rec-badge">07</div>
+        <div class="rec-body">
+          <div class="rec-title">Education Level &amp; Assessment Scores</div>
+          <div class="rec-desc">Include educational background and ATS pre-employment assessment scores as additional features. Even a coarse education-level field may add meaningful predictive power.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--info"></span>Effort: Medium · requires ATS data access</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--low">
+        <div class="rec-badge">08</div>
+        <div class="rec-body">
+          <div class="rec-title">Time-to-Ramp Prediction</div>
+          <div class="rec-desc">Add a secondary output: predicted time to full productivity alongside tier. A High Performer who takes 6 months to ramp is a different planning case than one performing at Day 45.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--info"></span>Effort: Medium · regression head on same features</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--low">
+        <div class="rec-badge">09</div>
+        <div class="rec-body">
+          <div class="rec-title">REST API Wrapper + ATS Integration</div>
+          <div class="rec-desc">Wrap the model as a FastAPI REST endpoint and integrate with the ATS. Recruiters see predicted tier directly on the candidate profile at the moment of review — no CSV export needed.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--info"></span>Effort: 2–3 weeks · FastAPI wrapper + ATS integration</div>
+        </div>
+      </div>
+      <div class="rec-card rec-card--low">
+        <div class="rec-badge">10</div>
+        <div class="rec-body">
+          <div class="rec-title">Production Feedback Loop</div>
+          <div class="rec-desc">Build a tracking table: every scored candidate → actual PTG outcome at 90–180 days post-hire. Validates production accuracy, surfaces systematic errors by site/program/recruiter, generates labeled data for next retrain.</div>
+          <div class="rec-effort"><span class="ds-dot ds-dot--info"></span>Effort: Medium · Dataverse table + scheduled join job</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 8. TECH REF ═══ -->
+  <section id="techref">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num t-eyebrow">08</span><span class="t-eyebrow">Technical Reference</span></div>
+      <h2 class="t-section">Files, commands, and thresholds.</h2>
+    </div>
+
+    <div class="two-col two-col--6040" style="margin-bottom:20px">
+      <div class="ds-card">
+        <div class="ds-card__head">Repository Structure</div>
+        <div class="code-block" style="font-size:11px">PredictiveModel/
+├── <span class="kw">src/</span>
+│   ├── config.py           <span class="cm"># tier labels, cutpoints</span>
+│   ├── kpi_targets.py      <span class="cm"># tercile tier builder</span>
+│   ├── evaluate.py         <span class="cm"># metrics + plots</span>
+│   ├── features.py         <span class="cm"># feature engineering</span>
+│   └── train_kpi_model.py  <span class="cm"># full training pipeline</span>
+├── <span class="kw">app/</span>
+│   ├── predictor.py        <span class="cm"># load_artifact, predict_one, predict_batch</span>
+│   ├── schema_utils.py     <span class="cm"># schema parsing + validation</span>
+│   └── scoring_app.py      <span class="cm"># Streamlit UI</span>
+├── <span class="kw">models/</span>
+│   ├── model_kpi_a.joblib  <span class="cm"># trained artifact</span>
+│   └── schema_kpi.json     <span class="cm"># input schema</span>
+├── <span class="kw">reports/</span>
+│   └── kpi_metrics.md      <span class="cm"># training run metrics</span>
+└── <span class="kw">docs/</span>
+    ├── scoring-app-autoalchemy.html
+    └── leadership-brief-autoalchemy.html</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="ds-card ds-card--flat">
+          <div class="ds-card__head">Key Thresholds</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td class="td-bold">p33 cutpoint</td><td class="td-num">91.66%</td></tr>
+                <tr><td class="td-bold">p67 cutpoint</td><td class="td-num">102.98%</td></tr>
+                <tr><td class="td-bold">Training set</td><td class="td-num">33,374</td></tr>
+                <tr><td class="td-bold">Test set</td><td class="td-num">8,343</td></tr>
+                <tr><td class="td-bold">Model accuracy</td><td class="td-num td-accent">58.3%</td></tr>
+                <tr><td class="td-bold">Baseline</td><td class="td-num">33.3%</td></tr>
+                <tr><td class="td-bold">AUC</td><td class="td-num td-accent">0.762</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-card ds-card--flat">
+          <div class="ds-card__head">Run Scoring App</div>
+          <div class="code-block" style="font-size:11px">cd <span class="str">"E:\work\concentrix\PredictiveModel"</span>
+streamlit run app/scoring_app.py
+<span class="cm"># → http://localhost:8501</span></div>
+        </div>
+        <div class="ds-card ds-card--flat">
+          <div class="ds-card__head">Retrain Model</div>
+          <div class="code-block" style="font-size:11px">cd <span class="str">"E:\work\concentrix\PredictiveModel"</span>
+python -m src.train_kpi_model
+<span class="cm"># Reads CDM → trains → saves joblib + schema</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-alert ds-alert--info">
+      <div class="ds-alert__title">Document Information</div>
+      Prepared by the Concentrix PH Performance Intelligence team · Phase 2 Complete · 26 June 2026 · For questions on model methodology, contact the analytics team · For access to the scoring app, contact data engineering
+    </div>
+  </section>
+
+</div><!-- /page -->
+
+<script>
+  /* nav active state */
+  const sections = ['exec','problem','data','model','performance','usage','recs','techref'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+  function scrollTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+  window.addEventListener('scroll', () => {
+    let cur = sections[0];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 130) cur = id;
+    });
+    navBtns.forEach((b,i) => b.classList.toggle('active', sections[i] === cur));
+  }, { passive: true });
+
+  /* theme toggle */
+  function toggleTheme(btn) {
+    const app = document.getElementById('app');
+    const isDark = app.getAttribute('data-theme') === 'dark';
+    app.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    btn.textContent = isDark ? '☀ Light' : '☾ Dark';
+  }
+</script>
+</body>
+</html>
