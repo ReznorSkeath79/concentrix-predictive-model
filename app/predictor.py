@@ -29,6 +29,17 @@ def load_artifact(
     """
     artifact = joblib.load(model_path)
     schema = json.loads(Path(schema_path).read_text(encoding="utf-8"))
+
+    # Compute low-cardinality categorical cols from schema so predict_one can force
+    # category dtype even when values are NaN (which loses the object dtype signal).
+    high_card_set = set(artifact.get("high_card_cols", []))
+    artifact["_low_card_cats"] = [
+        name for name, info in schema["features"].items()
+        if info["type"] == "categorical"
+        and name not in high_card_set
+        and name in set(artifact["feature_cols"])
+    ]
+
     return artifact, schema
 
 
@@ -60,6 +71,9 @@ def predict_one(artifact: dict, input_dict: dict) -> dict:
     X_enc = coerce_dtypes(encoder.transform(X.copy()), high_card_cols)
     for col in X_enc.select_dtypes(include=["object"]).columns:
         X_enc[col] = X_enc[col].astype("category")
+    for col in artifact.get("_low_card_cats", []):
+        if col in X_enc.columns and X_enc[col].dtype != "category":
+            X_enc[col] = X_enc[col].astype("category")
 
     tier_idx = int(model.predict(X_enc)[0])
     proba    = model.predict_proba(X_enc)[0].tolist()
