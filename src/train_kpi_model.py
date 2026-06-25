@@ -37,7 +37,7 @@ from features import (
     engineer_features, get_prehire_features, FoldTargetEncoder, coerce_dtypes,
 )
 from kpi_targets import build_kpi_labels
-from evaluate import evaluate_model, write_metrics_md
+from evaluate import evaluate_model
 
 logging.basicConfig(
     level=logging.INFO,
@@ -253,6 +253,7 @@ def run():
         shap_values=shap_vals,
         shap_X=shap_X,
         class_labels=KPI_TIER_LABELS,
+        baseline_acc=maj_acc,
     )
 
     # Persist
@@ -279,7 +280,6 @@ def run():
     schema_path.write_text(json.dumps(schema, indent=2), encoding='utf-8')
     log.info(f"  Schema saved → {schema_path}")
 
-    write_metrics_md([metrics])
     _write_kpi_metrics_md(metrics, tier_info, maj_acc)
     return metrics
 

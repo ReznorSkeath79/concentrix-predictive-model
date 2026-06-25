@@ -40,6 +40,7 @@ def evaluate_model(
     shap_values=None,
     shap_X: pd.DataFrame = None,
     class_labels: list = None,
+    baseline_acc: float = None,
 ) -> dict:
     """
     Full evaluation pass. Writes confusion matrix, calibration, SHAP, and
@@ -72,12 +73,14 @@ def evaluate_model(
 
     report = classification_report(y_test, y_pred, output_dict=True, zero_division=0)
 
+    _baseline = baseline_acc if baseline_acc is not None else BASELINE_ACC
+
     metrics = {
         'model':              model_name,
         'n_test':             int(len(y_test)),
         'accuracy':           round(acc, 4),
-        'baseline_accuracy':  BASELINE_ACC,
-        'lift_vs_baseline':   round(acc - BASELINE_ACC, 4),
+        'baseline_accuracy':  _baseline,
+        'lift_vs_baseline':   round(acc - _baseline, 4),
         'macro_f1':           round(macro_f1, 4),
         'auc_ovr_macro':      round(auc, 4) if auc is not None else None,
         'classification_report': report,
@@ -85,7 +88,7 @@ def evaluate_model(
 
     log.info(
         f"[{model_name}] Test accuracy={acc:.4f} "
-        f"(+{acc - BASELINE_ACC:+.4f} vs baseline) | "
+        f"(+{acc - _baseline:+.4f} vs baseline) | "
         f"Macro-F1={macro_f1:.4f} | AUC={f'{auc:.4f}' if auc else 'N/A'}"
     )
 
