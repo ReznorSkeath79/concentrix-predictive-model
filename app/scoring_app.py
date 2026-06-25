@@ -61,7 +61,7 @@ with st.sidebar:
     st.caption("Concentrix PH — Advisor Performance")
     st.divider()
     st.subheader("Model Info")
-    st.metric("AUC",      f"{artifact['metrics']['auc']:.3f}")
+    st.metric("AUC",      f"{artifact['metrics']['auc_ovr_macro']:.3f}")
     st.metric("Accuracy", f"{artifact['metrics']['accuracy']:.1%}")
     st.metric("Baseline", f"{artifact['majority_baseline_acc']:.1%}")
     st.metric("Lift",     f"+{artifact['metrics']['lift_vs_baseline']:.1%}")
