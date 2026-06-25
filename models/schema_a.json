@@ -1,0 +1,939 @@
+{
+  "version": "1.0",
+  "description": "Model A (pre-hire) input schema \u2014 Phase 2 upload site",
+  "star_output": {
+    "values": [
+      1,
+      3,
+      4,
+      5
+    ],
+    "ordinal_map": {
+      "1": 0,
+      "3": 1,
+      "4": 2,
+      "5": 3
+    },
+    "labels": [
+      "STAR 1 (At-Risk)",
+      "STAR 3",
+      "STAR 4",
+      "STAR 5 (Top)"
+    ]
+  },
+  "features": {
+    "CL-Adobe": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-BI": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-CISCO": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-COPC": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-CPA": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Domo": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-ForeignLanguage": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Google": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Health Care": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-IBM": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-ISO": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Java": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-LINUX": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Legal": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Microsoft": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-ORACLE": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-PRC": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Project": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Public Service": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Salesforce": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-SixSigma": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Social Media": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "CL-Teaching": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Back Office": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Chat - Inbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Chat - Outbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Email - Inbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Email - Outbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Specialized": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Voice - Inbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ChS-Voice - Outbound": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Converge": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP DITO": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Globe": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP No ISP": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Other": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP PLDT": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Red Fiber": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Sky": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Smart": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "ISP Starlink": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Admin": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Engagement": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Fraud Risk Officer": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-HR": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Learning and Development": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Manager": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Other Operations Officer": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Other Support Officer": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Quality": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Reporting": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-SME": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Supervisor": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Team Lead": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-Training": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "L-WFM": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-CS": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Collection": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Escalations": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Fraud": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-KYC": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Retention": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Sales": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Specialized": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-TS": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "S-Trust Safety": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Bus": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Fast craft": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Grab": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Jeepney": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Train": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Tricycle": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "Tr-Van": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Automotive": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Banking": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Consumer": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Healthcare": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Insurance": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Media": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Others": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Retail": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Technical": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Travel": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "V-Utilities": {
+      "type": "binary",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "GC Region": {
+      "type": "categorical",
+      "values": [
+        "BARMM",
+        "CAR",
+        "I",
+        "II",
+        "III",
+        "IVA - CALABARZON",
+        "IX",
+        "MIMAROPA",
+        "NCR",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "X",
+        "XI",
+        "XII",
+        "XIII"
+      ]
+    },
+    "GC Barangay": {
+      "type": "categorical",
+      "values": [
+        "#045 Magsaysay Drive Loakan Proper",
+        "#11 Tangigue St., Brgy. Lapu-lapu, Agdao, Davao City",
+        "#177 Zone 2, La Opinion",
+        "#18  Margelo Bayan Luma 5 Imus cavite city",
+        "#18 Santo Nino Road, Bakakeng Central",
+        "#19 m. lizares st ext. zonew 2",
+        "#209 Purok 6, Brgy. Ulat",
+        "#26 Manarang Street 301 Telabastagan City of San Fernando",
+        "#29 Magsaysay, Loakan",
+        "#29 Purok 2 Upper Scout Barrio",
+        "#3 bria homes san gregorio san pablo city laguna",
+        "#360 Gumamela Ext. Carmen",
+        "#42-2 Sapang Palay Concepcion Grande",
+        "#46 Scout Barrio",
+        "#531 Sitio Balot san Roque, Paombong, Bulacan",
+        "#699 A Avenue, Balibago, Angeles City, Pampanga",
+        "#7 Tangigue Street New Salmonan Brgy Aquino Agdao Davao city",
+        "#7087 Apitong Street Kias Baguio City",
+        "#71 purok 2 Lower Quirino Hill",
+        "#8 Mirasol.St. Mandurriao",
+        "#80 A, Purok 1, Ambuklao Road, Gibraltar",
+        "#9 Village 10 Bugac Maa, Davao City",
+        "#95 Don Candido Subdivision North Fundidor Molo Iloilo City",
+        "'-",
+        ".",
+        "..",
+        "0",
+        "0024 Abraham St. Tiaong Baliuag Bulacan",
+        "003 Dahlia Street San Luis Village Baguio City",
+        "013 M. H. DEL PILAR ST. BRGY. STA. ROSA",
+        "021 J. De Guzman St. Mangalit",
+        "028 1C Sampaloc",
+        "0368 AIRMENS VILLAGE, MABIGA",
+        "04 Lower Brookside, Baguio City",
+        "057 Apartment C JP LAUREL St. Virgen Delos Remedios",
+        "061 Purok 9 Irisan",
+        "0630 Gulod 1 San Jose Patag",
+        "0667-unit 11 Barangay Turbina",
+        "067 Dulong Habay, Habay II City of Bacoor, Cavite",
+        "0736 san juan street looc",
+        "0769 Verde Avenue Pinaod, San Ildefonso, Bulacan",
+        "08B Padre Zamora",
+        "098 Sevel Village Sipi Daraga Albay",
+        "0992 Arago St. Macamot",
+        "1",
+        "1 Purok 3 Pinsao Pilot Project",
+        "1-A",
+        "10",
+        "10 - M (Kingfisher)",
+        "10-A"
+      ]
+    },
+    "GC Education": {
+      "type": "categorical",
+      "values": [
+        "College Graduate",
+        "College Undergraduate",
+        "HS Gradaute (Pre-K12)",
+        "HS Graduate (K12)",
+        "High School Undergraduate",
+        "Not Indicated",
+        "Post Graduate",
+        "Vocational Graduate",
+        "Vocational Undergraduate"
+      ]
+    },
+    "xSite": {
+      "type": "categorical",
+      "values": [
+        "Alabang",
+        "Bacolod",
+        "Baguio",
+        "Bridgetowne",
+        "CDO",
+        "Cebu",
+        "Clark",
+        "Cyber West",
+        "Davao",
+        "Eton",
+        "Iloilo",
+        "Laguna",
+        "MDC",
+        "Makati",
+        "Mandaluyong",
+        "Naga",
+        "Pasay",
+        "Perm WAH",
+        "San Lazaro",
+        "Spark",
+        "Taguig",
+        "UPA",
+        "VNCC"
+      ]
+    },
+    "Work At Home Status": {
+      "type": "categorical",
+      "values": [
+        "CNX-Office",
+        "Hybrid",
+        "Permanent Work At Home",
+        "Temporarily Not Available",
+        "Temporarily Working From Home (WAH)"
+      ]
+    },
+    "Work At Home Sub Status": {
+      "type": "categorical",
+      "values": [
+        "(Blank)",
+        "Client Funded/Required",
+        "Concentrix unable to deliver equipment, otherwise staff meets criteria",
+        "Eligible to Work From Home (WAH)",
+        "Ineligible to Work From Home (WAH)",
+        "Not Applicable",
+        "On Leave",
+        "Staff does not meet other Eligibility Criteria"
+      ]
+    },
+    "Management Level Description": {
+      "type": "categorical",
+      "values": [
+        "Business Support - Entry",
+        "Business Support - Intermediate",
+        "Business Support - Senior",
+        "Contact Center Advisor - Entry",
+        "Contact Center Advisor - Intermediate",
+        "Contact Center Advisor - Lead",
+        "Contact Center Advisor - Senior",
+        "Professional - Entry",
+        "Professional - Intermediate I",
+        "Supervisory/Management - Sr. Team Leader/Sr. Supervisor",
+        "Supervisory/Management - Team Leader Trainee",
+        "Supervisory/Management - Team Leader/Supervisor",
+        "Technical Business Support - Intermediate",
+        "Technical Professional - Advanced",
+        "Technical Professional - Experienced"
+      ]
+    },
+    "Job Grade": {
+      "type": "numeric",
+      "range": [
+        10.0,
+        12.0
+      ]
+    },
+    "MSA Fusion": {
+      "type": "categorical",
+      "values": [
+        "0036 - Google - GOOGLE-DRIVE",
+        "0055 - Cdw - CDWBIDSUPPORT",
+        "0085 - Google - GOOGLE-NOC",
+        "0231 - Razer - RAZER",
+        "0250 - Supportrix - STXCISCO",
+        "0284 - Dish - DISH",
+        "0406 - Inspirato - INSPIRATO",
+        "0408 - Mitac - MITACANZ",
+        "0467 - Cdw - CDW",
+        "0480 - Google - GOOGLEPLAY",
+        "0531 - Amazon - AMAZONSELL",
+        "0532 - Amazon - AMAZONWVCS",
+        "0542 - Avalon - APPLEDIST",
+        "0545 - Avalon - APPLEPTY",
+        "0849 - Citibank - CITICORP",
+        "0874 - General Motors - GENERALMOTORS",
+        "0900 - Htc - HTC",
+        "0938 - Xerox - IBMXEROX",
+        "0976 - Keybank - KEYBANKCOLLECT",
+        "0977 - Keybank - KEYBANKCUSTSRV",
+        "10114 - Stellantis - 980001349",
+        "10123 - Cigna - 980001364",
+        "10126 - Portable On Demand Storage - 980001373",
+        "10172 - Cigna - 980001387",
+        "10176 - Cigna - 980001388",
+        "10202 - Intuit - 980001413",
+        "10212 - Bytedance - 980001425",
+        "10217 - Citibank - 980001431",
+        "10218 - Cognosphere - 980001432",
+        "10241 - Independence Blue Cross - 980001442",
+        "10244 - Caresource - 980001470",
+        "10245 - Allstate - 980001449",
+        "10310 - Vodafone - 980001617",
+        "10316 - Distrokid - 980001627",
+        "10317 - Rain - 980001625",
+        "10327 - Lowes - 980001638",
+        "10329 - Cvs Health Aetna - 980001640",
+        "10374 - Autodesk - S00083454",
+        "10422 - Reckittbenck - 980001706",
+        "10473 - Pinduoduo - 980001712",
+        "10498 - Facebook - 980001747",
+        "10499 - Humana - 980001748",
+        "10588 - Citibank - 980001829",
+        "10589 - Citibank - 980001832",
+        "10611 - Citibank - 980001830",
+        "10614 - Comcast Corp - 980001792",
+        "10631 - A Place For Mom - 980001874",
+        "10633 - T_Mobile - 980001885",
+        "10637 - Dish - 980001909",
+        "10658 - Amazon - 980001870"
+      ]
+    },
+    "Site Distance": {
+      "type": "numeric",
+      "range": [
+        0.1142550945383851,
+        1051.0303252767678
+      ]
+    },
+    "Valley Fault": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "Zip Code": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        9806.0
+      ]
+    },
+    "Site Longitude": {
+      "type": "numeric",
+      "range": [
+        120.60919,
+        125.6312138
+      ]
+    },
+    "Site Latitude": {
+      "type": "numeric",
+      "range": [
+        7.0916329,
+        16.39878
+      ]
+    },
+    "cnt_L": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        15.0
+      ]
+    },
+    "cnt_S": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        10.0
+      ]
+    },
+    "cnt_ChS": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        8.0
+      ]
+    },
+    "cnt_CL": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        23.0
+      ]
+    },
+    "cnt_Tr": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        7.0
+      ]
+    },
+    "cnt_ISP": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        9.0
+      ]
+    },
+    "cnt_V": {
+      "type": "numeric",
+      "range": [
+        0.0,
+        11.0
+      ]
+    },
+    "flag_completeness": {
+      "type": "numeric",
+      "range": [
+        1.0,
+        1.0
+      ]
+    },
+    "dist_bucket": {
+      "type": "categorical",
+      "values": [
+        "15-30km",
+        "30-60km",
+        "5-15km",
+        "<5km",
+        ">60km"
+      ]
+    }
+  }
+}
