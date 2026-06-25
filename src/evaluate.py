@@ -101,14 +101,17 @@ def evaluate_model(
         metrics['at_risk_threshold_report'] = _threshold_report(
             y_test, at_risk_proba, AT_RISK_CLASS, f'{model_name}_at_risk'
         )
-        # Top-performer head
-        top_proba = y_proba[:, TOP_PERF_CLASSES].sum(axis=1)
-        metrics['top_perf_threshold_report'] = _threshold_report(
-            y_test, top_proba,
-            class_idx=None,   # binary: 1 if STAR 4 or 5
-            tag=f'{model_name}_top_perf',
-            binary_y=(np.isin(y_test, TOP_PERF_CLASSES)).astype(int),
-        )
+        # Top-performer head — guard against models with fewer classes (e.g. 3-class KPI)
+        n_model_classes = y_proba.shape[1]
+        valid_top_classes = [c for c in TOP_PERF_CLASSES if c < n_model_classes]
+        if valid_top_classes:
+            top_proba = y_proba[:, valid_top_classes].sum(axis=1)
+            metrics['top_perf_threshold_report'] = _threshold_report(
+                y_test, top_proba,
+                class_idx=None,   # binary: 1 if top-performer class
+                tag=f'{model_name}_top_perf',
+                binary_y=(np.isin(y_test, valid_top_classes)).astype(int),
+            )
 
     # SHAP
     if shap_values is not None and shap_X is not None:
@@ -120,8 +123,10 @@ def evaluate_model(
 # ── Plots ─────────────────────────────────────────────────────────────────────
 
 def _plot_confusion(y_true, y_pred, model_name, class_labels=None):
-    labels = (class_labels if class_labels is not None else STAR_LABELS)[:N_CLASSES]
-    cm = confusion_matrix(y_true, y_pred, labels=list(range(N_CLASSES)))
+    n_cls = len(np.unique(np.concatenate([y_true, y_pred])))
+    n_cls = max(n_cls, len(class_labels)) if class_labels else max(n_cls, N_CLASSES)
+    labels = (class_labels if class_labels is not None else STAR_LABELS)[:n_cls]
+    cm = confusion_matrix(y_true, y_pred, labels=list(range(n_cls)))
     fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
                 xticklabels=labels, yticklabels=labels, ax=ax)
@@ -137,7 +142,11 @@ def _plot_confusion(y_true, y_pred, model_name, class_labels=None):
 
 def _plot_calibration(y_true, y_proba, model_name, class_labels=None):
     _cal_labels = class_labels if class_labels is not None else STAR_LABELS
-    fig, axes = plt.subplots(1, N_CLASSES, figsize=(4 * N_CLASSES, 4), sharey=True)
+    n_cls = y_proba.shape[1]
+    _cal_labels = _cal_labels[:n_cls]
+    fig, axes = plt.subplots(1, n_cls, figsize=(4 * n_cls, 4), sharey=True)
+    if n_cls == 1:
+        axes = [axes]
     for i, (ax, lbl) in enumerate(zip(axes, _cal_labels)):
         bin_y = (y_true == i).astype(int)
         if bin_y.sum() < 10:
