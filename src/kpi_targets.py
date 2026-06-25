@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import KPI_TARGET_COL, KPI_TIER_LABELS, N_KPI_CLASSES
+from config import KPI_TARGET_COL, KPI_TIER_LABELS
 
 
 def detect_ptg_col(df: pd.DataFrame) -> str | None:
@@ -24,7 +24,7 @@ def detect_ptg_col(df: pd.DataFrame) -> str | None:
     return None
 
 
-def build_kpi_labels(df: pd.DataFrame) -> tuple:
+def build_kpi_labels(df: pd.DataFrame) -> tuple[pd.Series, pd.Series, dict]:
     """
     Compute tercile-based KPI tier labels from Latest Weighted PTG.
 
