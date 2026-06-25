@@ -483,18 +483,28 @@ with tab_form:
     col_form, col_result = st.columns([1.6, 1])
 
     with col_form:
+        cert_fields = [s["name"] for s in field_specs if s["name"].startswith("CL-")]
+
         groups: dict[str, list[dict]] = {}
         for spec in field_specs:
             groups.setdefault(spec["group"], []).append(spec)
 
         form_values: dict = {}
 
-        flag_groups = [
+        # Transportation: excluded from UI — all fields left absent (→ NaN in model)
+
+        # Certifications: collapsed to a single yes/no
+        with st.expander("Certifications & Licences", expanded=False):
+            has_cert = st.checkbox("Has any certification or licence", value=False, key="has_cert")
+            for name in cert_fields:
+                form_values[name] = int(has_cert)
+
+        # Flag groups (Transportation and Certifications removed)
+        shown_flag_groups = [
             "Leadership Background", "Support Type Experience", "Channel Experience",
-            "Certifications & Licences", "Transportation", "Internet Service Provider",
-            "Industry Vertical Experience",
+            "Internet Service Provider", "Industry Vertical Experience",
         ]
-        for group_name in flag_groups:
+        for group_name in shown_flag_groups:
             if group_name not in groups:
                 continue
             with st.expander(group_name, expanded=False):
@@ -506,28 +516,37 @@ with tab_form:
                                         key=f"form_{spec['name']}")
                         )
 
+        # Demographics: only WFH status, education, tenure bracket
+        DEMO_SHOW = {"Work At Home Status", "GC Education", "tenure_bucket"}
+        DEMO_LABELS = {
+            "Work At Home Status": "WFH Status",
+            "GC Education":        "Education",
+            "tenure_bucket":       "Tenure Bracket",
+        }
         demo_group = groups.get("Demographics & Org Context", [])
-        if demo_group:
+        demo_specs = [s for s in demo_group if s["name"] in DEMO_SHOW]
+
+        if demo_specs:
             with st.expander("Demographics & Org Context", expanded=True):
                 c1, c2 = st.columns(2)
-                for i, spec in enumerate(demo_group):
+                for i, spec in enumerate(demo_specs):
+                    label = DEMO_LABELS.get(spec["name"], spec["name"])
                     with (c1 if i % 2 == 0 else c2):
                         if spec["type"] == "categorical":
                             opts = spec["options"] or []
-                            form_values[spec["name"]] = st.selectbox(
-                                spec["name"], opts or ["—"],
-                                index=0, key=f"form_{spec['name']}"
-                            ) if opts else None
+                            form_values[spec["name"]] = (
+                                st.selectbox(label, opts, index=0, key=f"form_{spec['name']}")
+                                if opts else None
+                            )
                         elif spec["type"] == "numeric":
                             form_values[spec["name"]] = st.number_input(
-                                spec["name"],
+                                label,
                                 min_value=spec["min"], max_value=spec["max"],
                                 value=spec["default"], key=f"form_{spec['name']}"
                             )
                         else:
                             form_values[spec["name"]] = int(
-                                st.checkbox(spec["name"], value=False,
-                                            key=f"form_{spec['name']}")
+                                st.checkbox(label, value=False, key=f"form_{spec['name']}")
                             )
 
         predict_btn = st.button("Run Prediction", type="primary", use_container_width=True)
