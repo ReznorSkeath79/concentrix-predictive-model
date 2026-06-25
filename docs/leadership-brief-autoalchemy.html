@@ -934,12 +934,12 @@ hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 
         </div>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div class="ds-alert ds-alert--info">
-            <div class="ds-alert__title">Most Predictive Single Feature</div>
-            Management Level at hire is the dominant signal. Advisors with any prior leadership role show significantly lower At-Risk probability.
+            <div class="ds-alert__title">Top Pre-Hire Signals (Advisor-Only Model)</div>
+            Site distance is the #1 pre-hire predictor — advisors closer to their site outperform. Charter school background, skills breadth, and ISP quality follow. Program placement is the dominant categorical predictor overall.
           </div>
-          <div class="ds-alert ds-alert--warn">
-            <div class="ds-alert__title">SHAP Re-run Needed</div>
-            The predictor rankings above are from STAR-era models. A dedicated SHAP analysis on the KPI model is Recommendation #1 — the rankings may shift.
+          <div class="ds-alert ds-alert--ok">
+            <div class="ds-alert__title">Model Retrained — Advisors Only</div>
+            Filtered to 58,140 advisors and production roles. Features cut from 122 → 82 (dropped transport noise, geographic noise, individual cert flags). Result: AUC 0.762 → 0.789, Macro F1 +12pp.
           </div>
           <div class="ds-alert ds-alert--ok">
             <div class="ds-alert__title">Probability Output Example</div>
