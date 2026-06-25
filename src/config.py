@@ -36,20 +36,28 @@ STAR_TARGET_COL = "Latest STAR Rating"
 
 # These columns encode the STAR outcome — never feed to any model as features
 LEAKAGE_COLS = [
-    "Latest Weighted PTG",
     "Latest STAR Rating",
     "Average PTG Last 3 Months",
     "Average STAR Last 3 Months",
     "Latest Performance Month",
     "Latest Performance Year",
     # lowercase duplicates so case-insensitive checks are easy
-    "latest weighted ptg",
     "latest star rating",
     "average ptg last 3 months",
     "average star last 3 months",
     "latest performance month",
     "latest performance year",
 ]
+
+# ── KPI target (new dependent variable — replaces STAR) ───────────────────────
+KPI_TARGET_COL  = "Latest Weighted PTG"
+KPI_TIER_LABELS = ["At-Risk", "Developing", "High Performer"]
+N_KPI_CLASSES   = 3
+
+# Probability head indices for the 3-class KPI model
+KPI_AT_RISK_CLASS    = 0   # tercile 1 — PTG below p33
+KPI_DEVELOPING_CLASS = 1   # tercile 2 — PTG p33..p67
+KPI_HIGH_PERF_CLASS  = 2   # tercile 3 — PTG above p67
 
 # Columns that are IDs / names / admin — never features
 ALWAYS_DROP = [
