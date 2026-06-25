@@ -885,52 +885,52 @@ hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 
     </div>
 
     <div class="ds-card" style="margin-bottom:16px">
-      <div class="ds-card__head">Known Predictors — Feature Importance Signals</div>
+      <div class="ds-card__head">Pre-Hire Predictor Signals — Advisor-Only Model (Verified)</div>
       <div class="two-col">
         <div>
           <div class="fi-row" style="margin-bottom:14px">
-            <span class="fi-label">Management Level at hire</span>
-            <div class="fi-track"><div class="fi-fill" style="width:92%"></div></div>
-            <span class="fi-pct">92%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Higher → better</span></span>
-          </div>
-          <div class="fi-row">
-            <span class="fi-label">CL-PRC (Licensed Professional)</span>
-            <div class="fi-track"><div class="fi-fill" style="width:78%"></div></div>
-            <span class="fi-pct">78%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
-          </div>
-          <div class="fi-row">
-            <span class="fi-label">Program / Client placement</span>
-            <div class="fi-track"><div class="fi-fill" style="width:74%"></div></div>
-            <span class="fi-pct">74%</span>
-            <span class="fi-dir"><span class="ds-pill" style="font-size:9px">± Mixed</span></span>
-          </div>
-          <div class="fi-row">
-            <span class="fi-label">Work-At-Home Status</span>
-            <div class="fi-track"><div class="fi-fill" style="width:68%"></div></div>
-            <span class="fi-pct">68%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">WFH positive</span></span>
-          </div>
-          <div class="fi-row">
-            <span class="fi-label">CL-CISCO / CL-Salesforce</span>
-            <div class="fi-track"><div class="fi-fill" style="width:62%"></div></div>
-            <span class="fi-pct">62%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
-          </div>
-          <div class="fi-row">
-            <span class="fi-label">Job Grade at hire</span>
-            <div class="fi-track"><div class="fi-fill" style="width:55%;background:var(--status-crit)"></div></div>
-            <span class="fi-pct">55%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--crit" style="font-size:9px">Low → At-Risk</span></span>
-          </div>
-          <div class="fi-row">
             <span class="fi-label">Site Distance (km)</span>
-            <div class="fi-track"><div class="fi-fill" style="width:38%;background:var(--status-warn)"></div></div>
-            <span class="fi-pct">38%</span>
-            <span class="fi-dir"><span class="ds-pill ds-pill--warn" style="font-size:9px">− Slight neg.</span></span>
+            <div class="fi-track"><div class="fi-fill" style="width:100%"></div></div>
+            <span class="fi-pct">100%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">Closer = better</span></span>
           </div>
-          <p class="footnote" style="margin-top:12px">Relative importance — higher bar = stronger signal. Derived from model feature importance; exact values subject to SHAP re-run.</p>
+          <div class="fi-row">
+            <span class="fi-label">Site placement (xSite)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:33%"></div></div>
+            <span class="fi-pct">33%</span>
+            <span class="fi-dir"><span class="ds-pill" style="font-size:9px">± Site-dependent</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Charter school background</span>
+            <div class="fi-track"><div class="fi-fill" style="width:25%"></div></div>
+            <span class="fi-pct">25%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Skills breadth (count)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:24%"></div></div>
+            <span class="fi-pct">24%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Industry experience (count)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:17%"></div></div>
+            <span class="fi-pct">17%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">Certifications (aggregate)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:11%"></div></div>
+            <span class="fi-pct">11%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <div class="fi-row">
+            <span class="fi-label">ISP quality (WFH signal)</span>
+            <div class="fi-track"><div class="fi-fill" style="width:11%"></div></div>
+            <span class="fi-pct">11%</span>
+            <span class="fi-dir"><span class="ds-pill ds-pill--ok" style="font-size:9px">+ Positive</span></span>
+          </div>
+          <p class="footnote" style="margin-top:12px">Pre-hire features only. Normalized to Site Distance = 100%. LightGBM split-count importance from advisor-only retrained model (2026-06-26).</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div class="ds-alert ds-alert--info">
