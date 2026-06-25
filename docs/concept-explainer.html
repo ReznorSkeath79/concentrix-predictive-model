@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plain English Guide — KPI Model Concepts · AutoAlchemy</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Doto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+/* ── TOKENS ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+:root {
+  --orange: #FF6B1A; --orange-2: #E85B10; --orange-ink: #B0470C;
+  --orange-soft: rgba(255,107,26,0.12); --orange-tint: rgba(255,107,26,0.07);
+  --paper-0: #FBF9F4; --paper-1: #F2EFE8; --paper-2: #E8E3D8; --paper-3: #DED8CB;
+  --ink: #1C1A16; --ink-2: #57534A; --ink-3: #8B8678;
+  --line: #DED8CB; --line-2: #E9E4D9;
+  --dk-0: #1C1A16; --dk-1: #242118; --dk-2: #2C2820; --dk-3: #38342A;
+  --dk-text-0: #F2EFE8; --dk-text-1: #C2BCAE; --dk-text-2: #8E8A7C;
+  --green: #5B7A3F; --amber: #B8801F; --red: #C0432C; --info: #4A6B7A;
+  --bg: var(--paper-0); --bg-dot: rgba(28,26,22,0.13);
+  --surface: var(--paper-1); --surface-2: var(--paper-0); --surface-3: var(--paper-3);
+  --text: var(--ink); --text-muted: var(--ink-2); --text-subtle: var(--ink-3);
+  --border: var(--line); --border-soft: var(--line-2); --border-strong: var(--ink);
+  --accent: var(--orange); --accent-2: var(--orange-2); --accent-text: var(--orange-ink);
+  --accent-soft: var(--orange-soft); --accent-tint: var(--orange-tint); --on-accent: #FFF;
+  --focus-ring: var(--orange);
+  --status-ok: var(--green); --status-warn: var(--amber); --status-crit: var(--red); --status-info: var(--info);
+  --ok-tint: rgba(91,122,63,0.12); --warn-tint: rgba(184,128,31,0.12);
+  --crit-tint: rgba(192,67,44,0.12); --info-tint: rgba(74,107,122,0.12);
+  --well: var(--paper-2);
+  --shadow-hard: 4px 4px 0 0 var(--ink); --shadow-hard-sm: 3px 3px 0 0 var(--ink);
+  --shadow-pop: 6px 6px 0 0 var(--ink);
+  --r-sm: 2px; --r-md: 2px; --r-lg: 3px;
+  --pad-card: 20px;
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-pixel: 'Doto', monospace;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: var(--dk-0); --bg-dot: rgba(242,239,232,0.12);
+  --surface: var(--dk-1); --surface-2: var(--dk-0); --surface-3: var(--dk-3);
+  --text: var(--dk-text-0); --text-muted: var(--dk-text-1); --text-subtle: var(--dk-text-2);
+  --border: rgba(242,239,232,0.14); --border-soft: rgba(242,239,232,0.08); --border-strong: var(--dk-text-0);
+  --accent: #FF6B1A; --accent-2: #FF8038; --accent-text: #FF8A45;
+  --accent-soft: rgba(255,107,26,0.18); --accent-tint: rgba(255,107,26,0.10); --on-accent: #1C1A16;
+  --status-ok: #7FA85C; --status-warn: #D6A03E; --status-crit: #DB5C44; --status-info: #6E97A8;
+  --ok-tint: rgba(127,168,92,0.14); --warn-tint: rgba(214,160,62,0.14);
+  --crit-tint: rgba(219,92,68,0.14); --info-tint: rgba(110,151,168,0.14);
+  --well: var(--dk-2);
+  --shadow-hard: 4px 4px 0 0 #000; --shadow-hard-sm: 3px 3px 0 0 #000;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-sans); font-size: 14px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; min-height: 100vh;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(var(--bg-dot) 1px, transparent 1.5px);
+  background-size: 6px 6px; opacity: 0.55;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, var(--accent-tint), transparent 60%);
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: var(--accent); color: var(--on-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--ink-3) transparent; }
+
+.t-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-subtle); }
+.t-page    { font-size: 28px; font-weight: 800; line-height: 1.15; letter-spacing: -0.015em; }
+.t-section { font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+.t-body-sm { font-size: 13px; line-height: 1.55; }
+
+.ds-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--text); }
+.ds-logo__mark { width: 22px; height: 22px; flex: none; background-image: radial-gradient(var(--text) 1px, transparent 1.5px); background-size: 4px 4px; -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%); mask-image: radial-gradient(circle at 50% 50%, #000 38%, transparent 70%); }
+.ds-logo__pixel { font-family: var(--font-pixel); font-weight: 700; }
+
+.ds-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--border-strong); border-radius: var(--r-sm); white-space: nowrap; color: var(--text-muted); }
+.ds-pill--hot  { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+.ds-pill--ok   { color: var(--status-ok); border-color: var(--status-ok); }
+.ds-pill--warn { color: var(--status-warn); border-color: var(--status-warn); }
+.ds-pill--crit { color: var(--status-crit); border-color: var(--status-crit); }
+.ds-pill--info { color: var(--status-info); border-color: var(--status-info); }
+.ds-dot { width: 7px; height: 7px; border-radius: 1px; flex: none; display: inline-block; background: var(--text-subtle); }
+.ds-dot--ok { background: var(--status-ok); }
+.ds-dot--warn { background: var(--status-warn); }
+.ds-dot--crit { background: var(--status-crit); }
+.ds-dot--accent { background: var(--accent); }
+
+.ds-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); }
+.ds-card--flat { border: 1px solid var(--border); box-shadow: none; }
+.ds-card__head { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-subtle); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.ds-card__head::before { content: ""; width: 8px; height: 8px; background: var(--accent); flex: none; }
+
+.ds-kpi { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); display: flex; flex-direction: column; gap: 8px; }
+.ds-kpi__label { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-subtle); }
+.ds-kpi__value { font-family: var(--font-pixel); font-size: 28px; font-weight: 700; line-height: 1; color: var(--text); }
+.ds-kpi--hero { background: var(--well); box-shadow: none; border-color: var(--border); }
+.ds-kpi--hero .ds-kpi__value { font-size: 52px; font-weight: 900; }
+.ds-kpi--accent .ds-kpi__value { color: var(--accent-text); }
+.ds-kpi__foot { display: flex; align-items: center; gap: 8px; }
+
+.ds-alert { border: 1.5px solid; border-radius: var(--r-sm); padding: 14px 16px; font-size: 13px; }
+.ds-alert__title { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.ds-alert--ok { background: var(--ok-tint); border-color: var(--status-ok); }
+.ds-alert--ok .ds-alert__title { color: var(--status-ok); }
+.ds-alert--warn { background: var(--warn-tint); border-color: var(--status-warn); }
+.ds-alert--warn .ds-alert__title { color: var(--status-warn); }
+.ds-alert--crit { background: var(--crit-tint); border-color: var(--status-crit); }
+.ds-alert--crit .ds-alert__title { color: var(--status-crit); }
+.ds-alert--info { background: var(--info-tint); border-color: var(--status-info); }
+.ds-alert--info .ds-alert__title { color: var(--status-info); }
+
+.ds-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-sans); font-size: 12px; font-weight: 600; padding: 9px 15px; min-height: 36px; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: var(--text); cursor: pointer; white-space: nowrap; transition: transform 110ms, box-shadow 110ms; }
+.ds-btn--hard { box-shadow: var(--shadow-hard-sm); }
+.ds-btn--hard:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--ink); }
+.ds-btn--hard:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 0 var(--ink); }
+
+.tbl-wrap { border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: var(--well); }
+th { padding: 9px 14px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-subtle); border-bottom: 1.5px solid var(--border-strong); white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface-3); }
+.td-bold { font-weight: 600; color: var(--text); }
+.td-num  { font-family: var(--font-pixel); font-size: 13px; font-weight: 600; }
+.td-accent { font-family: var(--font-pixel); color: var(--accent-text); font-weight: 700; }
+
+.topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--surface-2); border-bottom: 1.5px solid var(--border-strong); position: sticky; top: 0; z-index: 100; }
+.topbar__right { display: flex; align-items: center; gap: 10px; }
+.theme-toggle { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-subtle); cursor: pointer; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); padding: 5px 10px; background: var(--surface); }
+.theme-toggle:hover { background: var(--surface-3); }
+.topbar__date { font-family: var(--font-pixel); font-size: 11px; letter-spacing: 0.06em; color: var(--text-subtle); }
+
+.app-body { display: flex; align-items: flex-start; min-height: calc(100vh - 56px); }
+
+.sidebar { width: 218px; flex-shrink: 0; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; border-right: 1.5px solid var(--border-strong); background: var(--surface-2); padding: 28px 0 40px; display: flex; flex-direction: column; gap: 0; scrollbar-width: none; }
+.sidebar::-webkit-scrollbar { display: none; }
+.sidebar__logo-row { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.sidebar__group-label { font-size: 9px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-subtle); padding: 14px 20px 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; position: relative; transition: background 80ms; }
+.nav-item:hover { background: var(--surface-3); }
+.nav-item::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: transparent; }
+.nav-item.active { background: var(--accent-tint); }
+.nav-item.active::before { background: var(--accent); }
+.nav-item__num { font-family: var(--font-pixel); font-size: 10px; font-weight: 700; color: var(--text-subtle); width: 22px; flex-shrink: 0; letter-spacing: 0.06em; }
+.nav-item.active .nav-item__num { color: var(--accent-text); }
+.nav-item__label { font-family: var(--font-sans); font-size: 12px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.nav-item.active .nav-item__label { color: var(--text); font-weight: 600; }
+.sidebar__divider { height: 1px; background: var(--border); margin: 10px 20px; }
+.sidebar__meta { padding: 14px 20px 0; font-size: 11px; color: var(--text-subtle); line-height: 1.8; }
+
+.content { flex: 1; min-width: 0; padding: 36px 32px 80px; display: flex; flex-direction: column; gap: 48px; max-width: 1160px; }
+
+section { scroll-margin-top: 72px; }
+.section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.section-num { font-family: var(--font-pixel); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; color: var(--accent-text); }
+.section-title-row { margin-bottom: 24px; }
+
+.hero { background: var(--well); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 32px 28px; box-shadow: var(--shadow-pop); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--bg-dot) 1px, transparent 1.5px); background-size: 6px 6px; opacity: 0.5; pointer-events: none; }
+.hero > * { position: relative; z-index: 1; }
+.hero__sub { font-size: 15px; color: var(--text-muted); line-height: 1.65; max-width: 72ch; margin: 10px 0 24px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.two-col--6040 { grid-template-columns: 1.5fr 1fr; }
+.two-col--7030 { grid-template-columns: 2fr 1fr; }
+
+hr.section-hr { height: 2px; background: var(--border); border: none; margin: 0 0 36px; }
+.footnote { font-size: 11px; color: var(--text-subtle); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 12px; }
+
+/* ── EXPLAINER-SPECIFIC ───────────────────────────────────── */
+.concept-card { background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--pad-card); box-shadow: var(--shadow-hard-sm); margin-bottom: 14px; }
+.concept-card__term { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+.concept-card__tagline { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 12px; }
+.concept-card__body { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+.concept-card__body p + p { margin-top: 10px; }
+.concept-card__body strong { color: var(--text); font-weight: 600; }
+
+.analogy-box { background: var(--accent-tint); border: 1.5px solid var(--accent); border-radius: var(--r-sm); padding: 12px 16px; margin-top: 14px; font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.analogy-box__label { font-size: 9px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 4px; }
+
+.number-callout { display: inline-flex; flex-direction: column; align-items: center; background: var(--well); border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); padding: 12px 18px; box-shadow: var(--shadow-hard-sm); min-width: 90px; }
+.number-callout__val { font-family: var(--font-pixel); font-size: 28px; font-weight: 900; color: var(--accent-text); line-height: 1; }
+.number-callout__label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-subtle); margin-top: 4px; text-align: center; }
+
+.callout-row { display: flex; align-items: flex-start; gap: 16px; margin-top: 12px; }
+.callout-row__text { flex: 1; font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+.callout-row__text strong { color: var(--text); }
+
+.visual-bar { margin: 12px 0; }
+.visual-bar__label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.visual-bar__track { height: 20px; background: var(--well); border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); overflow: hidden; }
+.visual-bar__fill { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: #fff; }
+.visual-bar__fill--accent { background: var(--accent); }
+.visual-bar__fill--ok { background: var(--status-ok); }
+.visual-bar__fill--subtle { background: var(--well); border-right: 1px solid var(--border); }
+
+.step-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.step-item { display: flex; gap: 14px; align-items: flex-start; }
+.step-item__num { font-family: var(--font-pixel); font-size: 13px; font-weight: 900; color: var(--accent-text); width: 24px; flex-shrink: 0; padding-top: 1px; }
+.step-item__body { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.step-item__body strong { color: var(--text); }
+
+.split-demo { display: grid; grid-template-columns: 4fr 1fr; gap: 0; border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); margin: 14px 0; }
+.split-demo__train { background: var(--ok-tint); padding: 14px 18px; border-right: 1.5px solid var(--border-strong); }
+.split-demo__test  { background: var(--info-tint); padding: 14px 18px; }
+.split-demo__label { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; }
+.split-demo__train .split-demo__label { color: var(--status-ok); }
+.split-demo__test  .split-demo__label { color: var(--status-info); }
+.split-demo__val { font-family: var(--font-pixel); font-size: 22px; font-weight: 900; color: var(--text); }
+.split-demo__sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.tier-strip { display: flex; gap: 0; border: 1.5px solid var(--border-strong); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-hard-sm); margin: 14px 0; }
+.tier-strip__seg { flex: 1; padding: 14px 12px; text-align: center; }
+.tier-strip__seg--crit { background: var(--crit-tint); border-right: 1.5px solid var(--border-strong); }
+.tier-strip__seg--warn { background: var(--warn-tint); border-right: 1.5px solid var(--border-strong); }
+.tier-strip__seg--ok   { background: var(--ok-tint); }
+.tier-strip__name { font-size: 12px; font-weight: 700; }
+.tier-strip__seg--crit .tier-strip__name { color: var(--status-crit); }
+.tier-strip__seg--warn .tier-strip__name { color: var(--status-warn); }
+.tier-strip__seg--ok   .tier-strip__name { color: var(--status-ok); }
+.tier-strip__range { font-family: var(--font-pixel); font-size: 10px; color: var(--text-subtle); margin-top: 4px; }
+.tier-strip__count { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 24px 16px 60px; }
+  .two-col, .two-col--6040, .two-col--7030 { grid-template-columns: 1fr; }
+  .split-demo { grid-template-columns: 1fr; }
+  .tier-strip { flex-direction: column; }
+}
+</style>
+</head>
+
+<body id="app" data-theme="light">
+
+<!-- ════════════ TOPBAR ════════════ -->
+<header class="topbar">
+  <span class="ds-logo">
+    <span class="ds-logo__mark"></span>
+    Auto<span class="ds-logo__pixel">Alchemy</span>
+  </span>
+  <div class="topbar__right">
+    <span class="topbar__date">26 JUN 2026</span>
+    <span class="ds-pill ds-pill--info">Plain English Guide</span>
+    <button class="theme-toggle" onclick="document.getElementById('app').dataset.theme = document.getElementById('app').dataset.theme === 'dark' ? 'light' : 'dark'; this.textContent = document.getElementById('app').dataset.theme === 'dark' ? '☀ Light' : '☾ Dark'">☾ Dark</button>
+    <button class="ds-btn ds-btn--hard" onclick="window.print()">⬇ Export</button>
+  </div>
+</header>
+
+<!-- ════════════ APP BODY ════════════ -->
+<div class="app-body">
+
+<!-- ════════════ SIDEBAR ════════════ -->
+<aside class="sidebar">
+  <div class="sidebar__logo-row">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--text-subtle)">KPI Predictive Model</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-top:2px">Plain English Guide</div>
+    <span class="ds-pill ds-pill--info" style="margin-top:8px;display:inline-flex">Concept Explainer</span>
+  </div>
+
+  <span class="sidebar__group-label">Sections</span>
+
+  <button class="nav-item active" onclick="navTo('what',this)"><span class="nav-item__num">01</span><span class="nav-item__label">What this model does</span></button>
+  <button class="nav-item" onclick="navTo('ptg',this)"><span class="nav-item__num">02</span><span class="nav-item__label">PTG &amp; KPI tiers</span></button>
+  <button class="nav-item" onclick="navTo('data',this)"><span class="nav-item__num">03</span><span class="nav-item__label">The data it learned from</span></button>
+  <button class="nav-item" onclick="navTo('training',this)"><span class="nav-item__num">04</span><span class="nav-item__label">How it was trained</span></button>
+  <button class="nav-item" onclick="navTo('lightgbm',this)"><span class="nav-item__num">05</span><span class="nav-item__label">LightGBM explained</span></button>
+  <button class="nav-item" onclick="navTo('metrics',this)"><span class="nav-item__num">06</span><span class="nav-item__label">Accuracy, AUC &amp; F1</span></button>
+  <button class="nav-item" onclick="navTo('tuning',this)"><span class="nav-item__num">07</span><span class="nav-item__label">Optuna &amp; tuning</span></button>
+  <button class="nav-item" onclick="navTo('output',this)"><span class="nav-item__num">08</span><span class="nav-item__label">Reading the output</span></button>
+  <button class="nav-item" onclick="navTo('signals',this)"><span class="nav-item__num">09</span><span class="nav-item__label">Feature importance</span></button>
+  <button class="nav-item" onclick="navTo('limits',this)"><span class="nav-item__num">10</span><span class="nav-item__label">What it cannot do</span></button>
+
+  <div class="sidebar__divider"></div>
+  <div class="sidebar__meta">
+    <div style="font-weight:600;color:var(--text);margin-bottom:6px">Companion to</div>
+    <div style="line-height:1.6;color:var(--text-subtle)">KPI Predictive Model<br>Leadership Brief<br><br>Read this first if any term in the brief is unclear.</div>
+  </div>
+</aside>
+
+<!-- ════════════ MAIN CONTENT ════════════ -->
+<main class="content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="t-eyebrow" style="margin-bottom:8px">Concept Explainer · No Technical Background Required</div>
+    <h1 class="t-page">What the brief actually<br>means — in plain English.</h1>
+    <p class="hero__sub">Every term in the Leadership Brief explained from scratch. No prior knowledge of AI, statistics, or machine learning needed. Start here, then the brief will make sense.</p>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span class="ds-pill ds-pill--info">10 Concepts</span>
+      <span class="ds-pill">No jargon</span>
+      <span class="ds-pill ds-pill--ok"><span class="ds-dot ds-dot--ok"></span>Plain language</span>
+    </div>
+  </div>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 01. WHAT THE MODEL DOES ═══ -->
+  <section id="what">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">01</span><span class="t-eyebrow">What this model does</span></div>
+      <h2 class="t-section">It's a prediction machine. You feed it a candidate's background, it tells you how likely they are to perform well.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Machine Learning Model</div>
+      <div class="concept-card__tagline">What it is in one line</div>
+      <div class="concept-card__body">
+        <p>A machine learning model is a computer program that has <strong>learned patterns from past data</strong> and uses those patterns to make predictions about new, unseen cases.</p>
+        <p>In this case: we gave the computer records for <strong>40,919 real Concentrix advisors</strong> — their background information when they were hired, and what their actual performance turned out to be after working for some time. The computer studied all those records and figured out which patterns tend to lead to high performance versus poor performance.</p>
+        <p>Now, when a new candidate comes in, we can run their background through the same model and it predicts which tier they'll likely fall into.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Think of it like a very experienced recruiter who has hired 40,000 people, remembered exactly how each one performed, and now uses all of that experience to evaluate the next candidate. The difference is: the computer never forgets, never gets tired, and processes patterns across tens of thousands of people simultaneously.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="ds-alert ds-alert--ok">
+        <div class="ds-alert__title">What it replaces</div>
+        A recruiter's gut feeling or a rough interview score. The model adds a data-backed signal on top of your existing process — it doesn't replace the human decision.
+      </div>
+      <div class="ds-alert ds-alert--warn">
+        <div class="ds-alert__title">What it does NOT do</div>
+        It does not guarantee a hire will be great. It gives a probability — a risk score. Final decisions remain with the recruiter.
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 02. PTG AND TIERS ═══ -->
+  <section id="ptg">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">02</span><span class="t-eyebrow">PTG &amp; KPI tiers</span></div>
+      <h2 class="t-section">PTG is a score that says how close an advisor is to their performance goal. The model predicts which range they'll land in.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">KPI — Key Performance Indicator</div>
+      <div class="concept-card__tagline">The numbers that measure job performance</div>
+      <div class="concept-card__body">
+        <p>KPI is just a fancy term for <strong>the metrics used to measure if someone is doing their job well</strong>. For a Concentrix advisor, KPIs might include things like call quality, how fast they resolve issues, customer satisfaction scores, and adherence to schedule.</p>
+        <p>Instead of looking at just one number, Concentrix combines all of these into a single score called <strong>PTG</strong>.</p>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">PTG — Percentage to Goal</div>
+      <div class="concept-card__tagline">The single score that measures overall performance</div>
+      <div class="concept-card__body">
+        <p>PTG stands for <strong>Percentage to Goal</strong>. It tells you how an advisor is performing relative to their assigned target, expressed as a percentage.</p>
+        <p><strong>PTG of 100%</strong> means the advisor is hitting their goal exactly. <strong>PTG of 85%</strong> means they're at 85% of what's expected. <strong>PTG of 120%</strong> means they're significantly exceeding their goal.</p>
+        <p>Concentrix takes multiple individual KPI scores (quality, efficiency, adherence, etc.) and calculates a weighted average to produce a single PTG number. This makes it easy to compare advisors across different programs and clients — a PTG of 95% means the same thing whether you're in a healthcare account or a telco account.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Imagine a student's GPA — it combines all their subject grades into one number. PTG does the same thing for an advisor's job metrics. Instead of needing to look at 8 different performance numbers, you look at one.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Tercile — The Three-Way Split</div>
+      <div class="concept-card__tagline">Why "At-Risk / Developing / High Performer" boundaries are what they are</div>
+      <div class="concept-card__body">
+        <p>A tercile is simply <strong>one-third of a population</strong>. If you line up all 40,919 advisors from lowest PTG to highest, then cut that line into three equal groups — you get three terciles.</p>
+        <p>The <strong>bottom third</strong> (the lowest 33% of PTG scores) becomes the "At-Risk" tier. The <strong>top third</strong> (the highest 33%) becomes "High Performer." Everyone in the <strong>middle third</strong> is "Developing."</p>
+        <p>This produces naturally balanced groups — roughly <strong>13,600 advisors in each tier</strong>. Balanced groups are important because if one group had 90% of the data and another had only 5%, the model would basically ignore the small group. Equal-sized groups means the model learns equally well how to identify all three tiers.</p>
+      </div>
+
+      <div class="tier-strip" style="margin-top:16px">
+        <div class="tier-strip__seg tier-strip__seg--crit">
+          <div class="tier-strip__name">At-Risk</div>
+          <div class="tier-strip__range">PTG &lt; 91.7%</div>
+          <div class="tier-strip__count">Bottom 33% · ~13,600 advisors</div>
+        </div>
+        <div class="tier-strip__seg tier-strip__seg--warn">
+          <div class="tier-strip__name">Developing</div>
+          <div class="tier-strip__range">91.7% – 103%</div>
+          <div class="tier-strip__count">Middle 33% · ~13,600 advisors</div>
+        </div>
+        <div class="tier-strip__seg tier-strip__seg--ok">
+          <div class="tier-strip__name">High Performer</div>
+          <div class="tier-strip__range">PTG &gt; 103%</div>
+          <div class="tier-strip__count">Top 33% · ~13,600 advisors</div>
+        </div>
+      </div>
+
+      <p class="footnote">The PTG cutpoints (91.7% and 103%) are not arbitrary — they are the exact percentile thresholds derived from the actual distribution of all 40,919 advisors' PTG scores.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Why Not Use the STAR Rating?</div>
+      <div class="concept-card__tagline">Why STAR was rejected as the performance target</div>
+      <div class="concept-card__body">
+        <p>STAR is a <strong>forced ranking system</strong>. It doesn't matter how good everyone is — by design, only the top ~10% of a team can ever receive the highest STAR, and the bottom ~50% always receive the lowest rating, even if the entire team improved dramatically.</p>
+        <p>This creates a fundamental problem: if you train an AI model to predict STAR, it learns <strong>"who is relatively worst on their specific team"</strong> — not who performs poorly in absolute terms. An advisor could perform perfectly well and still get a low STAR simply because their teammates are exceptional.</p>
+        <p>PTG avoids this — it measures absolute performance. A 95% PTG means the same thing everywhere, making it a fair and meaningful target for the model to learn from.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 03. DATA ═══ -->
+  <section id="data">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">03</span><span class="t-eyebrow">The data it learned from</span></div>
+      <h2 class="t-section">"Pre-hire features" are simply the facts that exist on a candidate's file before they join.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Features / Pre-Hire Variables</div>
+      <div class="concept-card__tagline">The inputs the model uses to make a prediction</div>
+      <div class="concept-card__body">
+        <p>A "feature" in machine learning is simply <strong>one piece of information</strong> about a person or record. The model uses 82 features — meaning it looks at 82 different facts about a candidate before making a prediction.</p>
+        <p>"Pre-hire" means <strong>all of these facts existed before the person was hired</strong>. The model only uses information that's available at the point of recruitment — things like: what certifications they hold, what kind of support experience they've had, how far they live from the site, and what industry verticals they've worked in.</p>
+        <p>It does <strong>not</strong> use anything that happens after hiring — no tenure, no performance history, no previous STAR ratings. The goal is to predict performance before anyone has even started working.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Think of features as the fields on a resume or application form. The model reads those fields the same way a recruiter would — but it's read the same form for 40,000+ people and knows which fields actually correlate with real performance, not just which ones sound impressive.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">CDM — The Data Source</div>
+      <div class="concept-card__tagline">Where the 40,919 advisor records came from</div>
+      <div class="concept-card__body">
+        <p>CDM stands for <strong>Common Data Model</strong> — it's the internal Concentrix database that stores advisor profile information and performance records. Think of it as the main employee data warehouse.</p>
+        <p>Of the 65,039 advisor records in CDM, only <strong>40,919 had a PTG score recorded</strong>. The rest were excluded because without a PTG, there's no performance target to learn from. You can't teach the model "this is what good looks like" if you don't know what that person's actual performance was.</p>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Data Leakage — The Biggest Trap</div>
+      <div class="concept-card__tagline">Why some data was deliberately excluded</div>
+      <div class="concept-card__body">
+        <p>Data leakage is when you accidentally give the model information that it <strong>wouldn't have at the time it's being used in real life</strong>. If you include post-hire information during training, the model appears to perform brilliantly — but it would be completely useless in the real world because that information doesn't exist yet when you're evaluating a new candidate.</p>
+        <p><strong>Example:</strong> If we included "tenure months" (how long they've worked) in the model, it would learn that advisors with 2+ years of tenure tend to be High Performers. Of course they do — they've already survived two years. But when you have a brand-new candidate, they have zero months of tenure. The model's knowledge becomes worthless.</p>
+        <p>Several fields were deliberately <strong>excluded</strong> to prevent this: the PTG score itself (that's the answer we're trying to predict), STAR ratings (derived from PTG), performance history, tenure, and active-period KPI rows. Only information that genuinely exists at the time of recruitment was kept.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Imagine training a weather forecaster by telling them both yesterday's forecast AND today's actual weather at the same time, then asking them to predict tomorrow. They'd score 100% — but only because they had the answer already. A real forecast has to be made before the weather happens. Same principle here.
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 04. TRAINING ═══ -->
+  <section id="training">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">04</span><span class="t-eyebrow">How it was trained</span></div>
+      <h2 class="t-section">Training means showing the model thousands of examples — with answers — so it learns the patterns on its own.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Training the Model</div>
+      <div class="concept-card__tagline">What "training" actually means</div>
+      <div class="concept-card__body">
+        <p>Training is the process where the model <strong>sees thousands of labeled examples</strong> — advisor profiles paired with their actual performance outcome — and adjusts its internal math until it can reliably predict the right outcome from the profile alone.</p>
+        <p>It's an iterative process: the model makes a guess, checks if it was right, identifies where it was wrong, and adjusts. This happens thousands of times automatically, until the patterns are solidified.</p>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Train / Test Split — The Exam It Didn't Study For</div>
+      <div class="concept-card__tagline">Why we hold back 20% of the data</div>
+      <div class="concept-card__body">
+        <p>Before training begins, the full dataset of 40,919 advisors is split into two groups. The model <strong>only trains on 80%</strong> (33,374 advisors). The remaining <strong>20% (8,343 advisors) are locked away</strong> and never shown to the model during training.</p>
+        <p>After training is complete, the model is tested on that locked-away 20% — records it has never seen. The accuracy scores reported in the brief (60.5%, AUC 0.789) are all from <strong>this held-out test set only</strong>. This is the honest measure of how the model performs on genuinely new data.</p>
+      </div>
+
+      <div class="split-demo">
+        <div class="split-demo__train">
+          <div class="split-demo__label">Training Set — Used to Learn</div>
+          <div class="split-demo__val">33,374</div>
+          <div class="split-demo__sub">80% of advisors · model sees these records and their outcomes</div>
+        </div>
+        <div class="split-demo__test">
+          <div class="split-demo__label">Test Set — Never Seen</div>
+          <div class="split-demo__val">8,343</div>
+          <div class="split-demo__sub">20% · locked away · used only to measure final accuracy</div>
+        </div>
+      </div>
+
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        It's like a student studying from 80% of a textbook, then being tested on questions from the remaining 20% they haven't read. If they score well, they genuinely learned the concepts — not just memorized the exact questions. If we tested on the same data it trained on, the score would be artificially high and meaningless.
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 05. LIGHTGBM ═══ -->
+  <section id="lightgbm">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">05</span><span class="t-eyebrow">LightGBM explained</span></div>
+      <h2 class="t-section">LightGBM is the specific algorithm the model uses. Think of it as the engine under the hood.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Decision Tree — The Building Block</div>
+      <div class="concept-card__tagline">Start here to understand LightGBM</div>
+      <div class="concept-card__body">
+        <p>A decision tree is a flowchart-like structure where the model asks a series of yes/no questions about a candidate, and at the end of the questions, arrives at a prediction.</p>
+        <p>For example: <em>"Does the candidate live within 20km of the site? → Yes. Do they have at least 2 certifications? → Yes. Did they have prior BPO experience? → No."</em> → Based on this path through the tree, the model predicts "Developing."</p>
+        <p>A single decision tree is simple but not very accurate. So LightGBM uses hundreds of them together.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Imagine a doctor narrowing down a diagnosis by asking a series of questions — "Do you have a fever? Do you have a sore throat? For how many days?" Each answer leads to the next question. A decision tree works the same way.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Gradient Boosting — Many Trees, Each Learning From the Last</div>
+      <div class="concept-card__tagline">Why LightGBM is so much better than a single decision tree</div>
+      <div class="concept-card__body">
+        <p>Gradient boosting means the model builds <strong>hundreds of trees one at a time</strong>, and each new tree is specifically trained to fix the mistakes the previous trees made. The final prediction is a combination of all those trees' opinions, weighted by how reliable each one is.</p>
+        <p>"Light" in LightGBM refers to the fact that it does this process very efficiently — it trains fast even on large datasets, which is why it's widely used in industry.</p>
+        <p>"GBM" stands for <strong>Gradient Boosting Machine</strong> — the technical name for this approach of building trees sequentially, each correcting the last.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Imagine a team of 500 advisors all independently evaluating the same candidate. Each advisor focuses on the cases where previous advisors got it wrong. Then you average all their votes, weighted by track record. That combined judgment is far more reliable than any single person's opinion — that's what LightGBM does with decision trees.
+      </div>
+    </div>
+
+    <div class="ds-card ds-card--flat">
+      <div class="ds-card__head">Why LightGBM was chosen over alternatives</div>
+      <div class="tbl-wrap" style="margin-top:0">
+        <table>
+          <thead><tr><th>Feature</th><th>Why it matters for this project</th></tr></thead>
+          <tbody>
+            <tr><td class="td-bold">Handles missing data natively</td><td>Many advisor profiles are incomplete — some fields were never filled in. LightGBM scores them anyway without requiring workarounds.</td></tr>
+            <tr><td class="td-bold">Handles mixed data types</td><td>The 82 features include yes/no flags, numbers (like distance), and categories (like region). LightGBM handles all three in one model.</td></tr>
+            <tr><td class="td-bold">Outputs probabilities, not just labels</td><td>Instead of just saying "High Performer," it says "74% chance High Performer, 20% Developing, 6% At-Risk." This gives recruiters nuance.</td></tr>
+            <tr><td class="td-bold">No feature scaling needed</td><td>Tree-based models don't care if one feature is measured in kilometers and another is a 0/1 flag — they treat each independently.</td></tr>
+            <tr><td class="td-bold">Trains in minutes on 40,000+ records</td><td>Fast enough to retrain whenever the underlying data changes, without needing specialist hardware.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 06. METRICS ═══ -->
+  <section id="metrics">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">06</span><span class="t-eyebrow">Accuracy, AUC &amp; F1</span></div>
+      <h2 class="t-section">Three different ways of measuring whether the model is actually good — each answers a different question.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Accuracy — 60.5%</div>
+      <div class="concept-card__tagline">The most intuitive metric: how often is it simply correct?</div>
+      <div class="concept-card__body">
+        <p>Accuracy is the percentage of predictions that were correct. Out of the 8,343 advisors in the test set, the model correctly predicted the right tier for <strong>60.5% of them</strong>.</p>
+        <p>The critical comparison: if you just <strong>guessed randomly</strong> between three equal tiers, you'd be right 33.3% of the time. The model scores 60.5% — that's a <strong>+27 percentage point improvement</strong> over guessing.</p>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="visual-bar">
+          <div class="visual-bar__label"><span>Random Guessing</span><span>33.3%</span></div>
+          <div class="visual-bar__track"><div class="visual-bar__fill" style="width:33.3%;background:var(--status-crit)">33.3%</div></div>
+        </div>
+        <div class="visual-bar">
+          <div class="visual-bar__label"><span>This Model</span><span>60.5%</span></div>
+          <div class="visual-bar__track"><div class="visual-bar__fill visual-bar__fill--accent" style="width:60.5%">60.5%</div></div>
+        </div>
+        <div class="visual-bar">
+          <div class="visual-bar__label"><span>Perfect Model</span><span>100%</span></div>
+          <div class="visual-bar__track"><div class="visual-bar__fill visual-bar__fill--ok" style="width:100%">100%</div></div>
+        </div>
+      </div>
+
+      <div class="analogy-box" style="margin-top:16px">
+        <div class="analogy-box__label">Why 60.5% is meaningful</div>
+        On a batch of 312 candidates, the model makes ~78 more correct placement decisions than chance alone. Each correct decision saved is a coaching hour reclaimed, a first-90-day attrition prevented, or an At-Risk flag caught before it becomes a performance issue.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">AUC — 0.789</div>
+      <div class="concept-card__tagline">The most important metric: how well can it separate one tier from another?</div>
+      <div class="concept-card__body">
+        <p>AUC stands for <strong>Area Under the Curve</strong> — specifically, the ROC curve (Receiver Operating Characteristic). It sounds complex but the idea is simple: <strong>how good is the model at telling the difference between two groups?</strong></p>
+        <p>AUC is measured from <strong>0.5 to 1.0</strong>. Here's what those numbers mean:</p>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:14px">
+        <table>
+          <thead><tr><th>AUC Value</th><th>Meaning</th><th>Analogy</th></tr></thead>
+          <tbody>
+            <tr><td class="td-num" style="color:var(--status-crit)">0.5</td><td>No better than flipping a coin</td><td>Guessing randomly</td></tr>
+            <tr><td class="td-num" style="color:var(--status-warn)">0.6 – 0.7</td><td>Weak — some separation but not reliable</td><td>A rough heuristic</td></tr>
+            <tr><td class="td-num" style="color:var(--accent-text)">0.7 – 0.8</td><td>Acceptable — useful in practice</td><td>A good trained intuition</td></tr>
+            <tr><td class="td-num td-accent">0.789</td><td><strong>This model — strong performance</strong></td><td>Consistently makes better-than-chance calls</td></tr>
+            <tr><td class="td-num" style="color:var(--status-ok)">0.9 – 1.0</td><td>Excellent to perfect</td><td>Near-perfect separation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="concept-card__body" style="margin-top:14px">
+        <p><strong>Why "Macro" AUC?</strong> Because we have three tiers, not just two. "Macro" means the model was evaluated separately on each pair of tiers (At-Risk vs others, Developing vs others, High Performer vs others) and the results were averaged equally. This ensures the model isn't just good at one tier while ignoring the others.</p>
+      </div>
+
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Imagine you randomly pick one High Performer and one At-Risk advisor from the dataset. AUC 0.789 means there is a <strong>78.9% chance</strong> the model correctly ranks the High Performer above the At-Risk advisor. Do that test 1,000 times — the model gets it right about 789 times. That's what 0.789 means.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Macro F1 — 0.603</div>
+      <div class="concept-card__tagline">The balanced scorecard: catches both false alarms and missed calls</div>
+      <div class="concept-card__body">
+        <p>Accuracy can be misleading in some situations. If 90% of candidates were High Performers, a model that just said "High Performer" every time would score 90% accuracy while being completely useless. F1 score catches this by combining two things:</p>
+        <p><strong>Precision</strong> — when the model says "At-Risk," how often is it actually right? (Avoiding false alarms)</p>
+        <p><strong>Recall</strong> — of all the actual At-Risk advisors, how many did the model catch? (Not missing real cases)</p>
+        <p>F1 is the balance between those two. <strong>Macro F1 of 0.603</strong> means the model performs reasonably well across all three tiers — it's not just good at one while ignoring the others. F1 ranges from 0 (useless) to 1.0 (perfect). 0.603 reflects solid, balanced performance for a 3-class prediction problem with imperfect pre-hire data.</p>
+      </div>
+
+      <div class="callout-row">
+        <div class="number-callout">
+          <div class="number-callout__val">0.0</div>
+          <div class="number-callout__label">Worst</div>
+        </div>
+        <div class="callout-row__text">
+          <strong>0.603 is this model.</strong> For context — the same model before the advisor-only population filter scored 0.484. The retrain to advisors-only improved F1 by +0.119, which is a meaningful jump. The model now identifies minority tiers (At-Risk, High Performer) much more reliably.
+        </div>
+        <div class="number-callout">
+          <div class="number-callout__val">1.0</div>
+          <div class="number-callout__label">Perfect</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 07. OPTUNA ═══ -->
+  <section id="tuning">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">07</span><span class="t-eyebrow">Optuna &amp; Hyperparameter Tuning</span></div>
+      <h2 class="t-section">Every model has settings. Optuna automatically finds the best settings so we don't have to guess.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Hyperparameters — The Dials and Knobs</div>
+      <div class="concept-card__tagline">The settings that control how the model learns</div>
+      <div class="concept-card__body">
+        <p>Before training starts, the model has a set of <strong>configuration settings</strong> — like how deep each decision tree can grow, how fast it learns, and how many trees to build. These are called hyperparameters.</p>
+        <p>Different combinations of settings produce very different models. Wrong settings = underperforming model. Right settings = best possible accuracy from your data. The problem: there are millions of possible combinations, and you can't try them all by hand.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Everyday Analogy</div>
+        Think of cooking a new recipe. You need to set the oven temperature, cooking time, and amount of seasoning. If any of those are wrong, the dish suffers — even if the ingredients are perfect. Hyperparameter tuning is finding the ideal temperature, time, and seasoning for your specific data.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Optuna — The Automated Settings Finder</div>
+      <div class="concept-card__tagline">50 experiments to find the best configuration</div>
+      <div class="concept-card__body">
+        <p>Optuna is a library that automatically <strong>runs 50 experiments</strong>, each with a different set of hyperparameter settings. After each experiment, it evaluates how well that configuration performed, and uses that result to make smarter guesses for the next experiment.</p>
+        <p>This approach is called <strong>Bayesian optimization</strong> — it's smarter than randomly trying combinations because it learns from each trial. By experiment 50, it has zeroed in on a configuration that produces the highest accuracy.</p>
+        <p>Each of the 50 experiments also uses <strong>cross-validation</strong> (explained next) to make the result trustworthy — so the final configuration isn't just lucky on one random split of the data.</p>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">5-Fold Cross-Validation</div>
+      <div class="concept-card__tagline">Testing 5 times on different slices to make sure the result is real</div>
+      <div class="concept-card__body">
+        <p>Instead of training on one fixed slice of the data and testing on another, cross-validation <strong>rotates which 20% is held out for testing</strong>, five times over. The training set is divided into 5 equal parts ("folds"). The model trains on 4 of those folds and tests on the 5th — then it repeats with a different fold as the test each time.</p>
+        <p>After 5 rounds, every single training example has been part of a test set exactly once. The final accuracy is the average of all 5 rounds.</p>
+        <p><strong>Why does this matter?</strong> A single train/test split could get lucky or unlucky depending on which advisors happen to end up in each group. Cross-validation removes that luck factor — the result is much more reliable.</p>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item"><div class="step-item__num">01</div><div class="step-item__body">Split all 33,374 training advisors into 5 equal groups of ~6,675 each.</div></div>
+        <div class="step-item"><div class="step-item__num">02</div><div class="step-item__body">Train on groups 1–4, test on group 5. Record accuracy.</div></div>
+        <div class="step-item"><div class="step-item__num">03</div><div class="step-item__body">Train on groups 1–3 + 5, test on group 4. Record accuracy.</div></div>
+        <div class="step-item"><div class="step-item__num">04</div><div class="step-item__body">Repeat until all 5 groups have each been the test set once.</div></div>
+        <div class="step-item"><div class="step-item__num">05</div><div class="step-item__body"><strong>Average the 5 accuracy scores.</strong> This is the final, reliable performance estimate for this configuration.</div></div>
+      </div>
+      <p class="footnote">50 Optuna trials × 5 folds = 250 total model fits run automatically. The configuration with the highest average cross-validated score is selected, then trained once more on the full 80% training set.</p>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 08. OUTPUT ═══ -->
+  <section id="output">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">08</span><span class="t-eyebrow">Reading the output</span></div>
+      <h2 class="t-section">The model doesn't just say "High Performer." It gives you a probability for each tier, so you can see how confident it is.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Probability Output</div>
+      <div class="concept-card__tagline">What "P(At-Risk) = 18.4%" actually means</div>
+      <div class="concept-card__body">
+        <p>For every candidate scored, the model returns three numbers that always <strong>add up to 100%</strong>:</p>
+        <p><strong>P(At-Risk)</strong> — the model's estimated probability that this person will end up in the At-Risk tier<br>
+        <strong>P(Developing)</strong> — probability of landing in the Developing tier<br>
+        <strong>P(High Performer)</strong> — probability of landing in the High Performer tier</p>
+        <p>The predicted tier is simply <strong>whichever probability is highest</strong>. But the numbers themselves tell you much more than just the label.</p>
+      </div>
+
+      <div class="two-col" style="margin-top:16px">
+        <div class="ds-card">
+          <div class="ds-card__head">High Confidence Prediction</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>At-Risk</span><span style="color:var(--status-crit)">6%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill" style="width:6%;background:var(--status-crit)"></div></div>
+            </div>
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>Developing</span><span style="color:var(--status-warn)">12%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill" style="width:12%;background:var(--status-warn)"></div></div>
+            </div>
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>High Performer</span><span style="color:var(--status-ok)">82%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill visual-bar__fill--ok" style="width:82%"></div></div>
+            </div>
+          </div>
+          <div class="ds-alert ds-alert--ok"><div class="ds-alert__title">Verdict: High Performer (confident)</div>82% probability. The model is very sure. Prioritize for offer.</div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-card__head">Low Confidence Prediction</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>At-Risk</span><span style="color:var(--status-crit)">36%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill" style="width:36%;background:var(--status-crit)"></div></div>
+            </div>
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>Developing</span><span style="color:var(--status-warn)">38%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill" style="width:38%;background:var(--status-warn)"></div></div>
+            </div>
+            <div class="visual-bar">
+              <div class="visual-bar__label"><span>High Performer</span><span style="color:var(--status-ok)">26%</span></div>
+              <div class="visual-bar__track"><div class="visual-bar__fill visual-bar__fill--ok" style="width:26%"></div></div>
+            </div>
+          </div>
+          <div class="ds-alert ds-alert--warn"><div class="ds-alert__title">Verdict: Developing (uncertain)</div>Barely above At-Risk at 38% vs 36%. The model is almost a coin-flip here — lean more on recruiter judgment.</div>
+        </div>
+      </div>
+
+      <div class="analogy-box" style="margin-top:14px">
+        <div class="analogy-box__label">Key Insight</div>
+        Two candidates can both receive a "Developing" label — but one could have 65% Developing confidence, and another 35% Developing with 34% At-Risk right behind it. The label is the same; the risk is very different. Always look at the full probability breakdown, not just the label.
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 09. FEATURE IMPORTANCE ═══ -->
+  <section id="signals">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">09</span><span class="t-eyebrow">Feature Importance</span></div>
+      <h2 class="t-section">Feature importance shows which pieces of a candidate's background the model relies on most heavily.</h2>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Feature Importance</div>
+      <div class="concept-card__tagline">What the model is actually paying attention to</div>
+      <div class="concept-card__body">
+        <p>After training, the model can report how much each feature contributed to its predictions. <strong>Features used more often to make decisions are ranked higher.</strong> This is called feature importance.</p>
+        <p>It answers the question: <em>"Out of the 82 things we know about a candidate, which ones actually move the needle on performance predictions?"</em></p>
+        <p>This is measured in <strong>split count</strong> — how many times the model chose to use that feature when making a decision across all its 500+ decision trees. The more splits, the more that feature influences the outcome.</p>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Why Site Distance is the #1 Pre-Hire Signal</div>
+      <div class="concept-card__tagline">The most counterintuitive finding in the brief</div>
+      <div class="concept-card__body">
+        <p>Site distance — how far a candidate lives from the Concentrix site — ranked as the single strongest pre-hire predictor of performance. <strong>Advisors who live closer to their site tend to be higher performers.</strong></p>
+        <p>This seems surprising until you think about what distance actually measures: <strong>attendance reliability and commute burden</strong>. An advisor with a 2-hour daily commute each way is at far greater risk of tardiness, burnout, and early attrition than one who lives 15 minutes away. Attendance and consistency, especially in the first 90 days, are strong predictors of long-term performance.</p>
+        <p>The model discovered this pattern on its own from 40,000+ advisor records — nobody programmed this rule. The data revealed it.</p>
+      </div>
+      <div class="analogy-box">
+        <div class="analogy-box__label">Important Context</div>
+        This doesn't mean reject candidates who live far away. It means that for far-commute candidates, you may want to consider additional support during onboarding, WFH arrangements, or transportation assistance to offset the attendance risk the model has identified.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-card__term">Why Management Level Dropped from #1 to #13</div>
+      <div class="concept-card__tagline">A lesson about how population filters change what the model sees</div>
+      <div class="concept-card__body">
+        <p>In a previous version of the model — which was trained on a mixed population of all Concentrix roles — Management Level at hire was the #1 predictor. This made sense: HR staff, workforce managers, and trainers had different management levels than production advisors, and those different levels correlated with different performance outcomes.</p>
+        <p>But when the model was retrained on <strong>advisors only</strong>, management level became almost useless. Why? Because <strong>nearly all advisors are hired at the same management level.</strong> A feature that's the same for 95% of your population tells you nothing — the model can't use it to differentiate between people.</p>
+        <p>This is a general principle: <strong>what matters depends on who you're predicting for.</strong> Always re-check which features are important when the target population changes.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-hr" />
+
+  <!-- ═══ 10. LIMITS ═══ -->
+  <section id="limits">
+    <div class="section-title-row">
+      <div class="section-label"><span class="section-num">10</span><span class="t-eyebrow">What it cannot do</span></div>
+      <h2 class="t-section">Knowing the limits is just as important as knowing the capabilities.</h2>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="ds-alert ds-alert--warn">
+        <div class="ds-alert__title">It cannot guarantee outcomes</div>
+        A 74% probability of High Performer means the model is fairly confident — but 26% of the time, that person will not land in the High Performer tier. This is a risk-ranking tool, not a crystal ball. Use it to <strong>prioritize attention and resources</strong>, not to make binary hire/no-hire decisions.
+      </div>
+      <div class="ds-alert ds-alert--warn">
+        <div class="ds-alert__title">It cannot account for post-hire factors</div>
+        Manager quality, team dynamics, training program effectiveness, and program placement quality all significantly affect performance — but none of these exist at the time of hire. A strong candidate placed in a poorly managed program may still struggle. An At-Risk prediction candidate placed in the right program with strong onboarding support may thrive.
+      </div>
+      <div class="ds-alert ds-alert--warn">
+        <div class="ds-alert__title">It cannot predict STAR ratings</div>
+        STAR is a forced ranking — by design, 50% of advisors will always receive the lowest STAR, regardless of absolute performance. The model predicts absolute performance (PTG tier), which is meaningfully different.
+      </div>
+      <div class="ds-alert ds-alert--crit">
+        <div class="ds-alert__title">At-Risk is not a rejection label</div>
+        An At-Risk prediction means this candidate carries higher risk of underperformance <strong>based on pre-hire data alone</strong>. It is a flag for more targeted onboarding support — Day 30/60/90 check-ins, stronger buddy assignment, program placement review — not a reason to reject a candidate. The decision to hire or not hire remains with the recruiter.
+      </div>
+      <div class="ds-alert ds-alert--info">
+        <div class="ds-alert__title">It was trained on advisors — use it for advisors</div>
+        The model was trained on 58,140 advisors and production roles only. Applying it to other roles (workforce managers, trainers, team leads) would produce unreliable scores — those populations have different performance dynamics that the model was not trained to understand.
+      </div>
+    </div>
+
+    <div class="ds-card" style="margin-top:20px">
+      <div class="ds-card__head">The right mental model for using this tool</div>
+      <div class="concept-card__body">
+        <p>Think of the model as a <strong>second opinion from an experienced analyst who has reviewed 40,000 advisor files</strong>. It offers a data-backed perspective that complements — not replaces — recruiter expertise.</p>
+        <p style="margin-top:10px">When the model and the recruiter agree: high confidence. When they disagree: that's a useful signal to dig deeper. What does the recruiter see that the data doesn't capture? What does the data show that the interview didn't reveal?</p>
+        <p style="margin-top:10px">The best outcomes come from treating model output as <strong>one input among several</strong> — alongside interview scores, reference checks, and recruiter judgment — not as the final word.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+function navTo(id, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const sec = document.getElementById(id);
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'"));
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
