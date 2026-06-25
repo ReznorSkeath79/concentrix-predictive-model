@@ -10,7 +10,7 @@ import pandas as pd
 
 
 # ── Field groups (for UI section headers) ────────────────────────────────────
-# Prefix → display group name. Unmatched fields go to "Other".
+# Prefix → display group name. Unmatched fields go to "Demographics & Org Context".
 _PREFIX_GROUPS = {
     "L-":   "Leadership Background",
     "S-":   "Support Type Experience",
@@ -46,7 +46,7 @@ def get_field_specs(schema: dict) -> list[dict]:
     for name, info in schema["features"].items():
         spec: dict = {"name": name, "type": info["type"], "group": _field_group(name)}
         if info["type"] == "binary":
-            spec["default"] = 0
+            spec["default"] = 0.0
             spec["options"] = None
             spec["min"]     = None
             spec["max"]     = None
@@ -80,7 +80,11 @@ def validate_and_coerce(user_input: dict, schema: dict) -> tuple[dict, list[str]
     for name, info in schema["features"].items():
         val = user_input.get(name)
 
-        if val is None or (isinstance(val, float) and np.isnan(val)):
+        try:
+            is_missing = pd.isna(val)
+        except (TypeError, ValueError):
+            is_missing = False
+        if val is None or is_missing:
             coerced[name] = np.nan
             continue
 
