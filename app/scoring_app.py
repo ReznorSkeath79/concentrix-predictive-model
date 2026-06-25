@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -96,6 +95,8 @@ with tab_form:
     form_values: dict = {}
 
     # Flags section: binary checkboxes in 4-column grid
+    # Groups whose fields are binary flags — rendered as 4-column checkbox grids.
+    # If the schema gains a new prefix-based group, add its name here.
     flag_groups = [
         "Leadership Background", "Support Type Experience", "Channel Experience",
         "Certifications & Licences", "Transportation", "Internet Service Provider",
@@ -173,7 +174,6 @@ with tab_form:
                 st.markdown("**Probability Breakdown**")
                 for i, label in enumerate(tier_labels):
                     p = result["proba"][i]
-                    bar_color = TIER_COLORS[label]
                     st.markdown(f"{TIER_ICONS[label]} **{label}**")
                     st.progress(p)
                     st.caption(f"{p:.1%}")
