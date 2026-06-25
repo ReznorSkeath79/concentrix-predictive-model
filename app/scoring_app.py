@@ -547,35 +547,33 @@ with tab_form:
                 for i, lbl in enumerate(tier_labels):
                     p  = result["proba"][i]
                     _, _, c = TIER_BADGE[lbl]
-                    prob_html += f"""
-                    <div class="prob-row">
-                      <div class="prob-header">
-                        <span class="name" style="color:{c}">▪ {lbl}</span>
-                        <span class="prob-pct" style="color:{c}">{p:.1%}</span>
-                      </div>
-                      <div class="prob-track">
-                        <div class="prob-fill" style="width:{p*100:.1f}%;background:{c}"></div>
-                      </div>
-                    </div>"""
+                    prob_html += (
+                        f'<div class="prob-row">'
+                        f'<div class="prob-header">'
+                        f'<span class="name" style="color:{c}">&#9642; {lbl}</span>'
+                        f'<span class="prob-pct" style="color:{c}">{p:.1%}</span>'
+                        f'</div>'
+                        f'<div class="prob-track">'
+                        f'<div class="prob-fill" style="width:{p*100:.1f}%;background:{c}"></div>'
+                        f'</div>'
+                        f'</div>'
+                    )
 
-                st.markdown(f"""
-                <div class="aa-card">
-                  <div class="aa-card__head">Prediction Output</div>
-                  <div class="result-grid">
-                    <div class="tier-badge {badge_cls}">
-                      <div class="tier-badge__icon">{icon}</div>
-                      <div class="tier-badge__name">{tier}</div>
-                      <div class="tier-badge__sub">Predicted KPI Tier</div>
-                    </div>
-                    <div>
-                      <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;
-                        letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);
-                        margin-bottom:12px">Probability Breakdown</div>
-                      {prob_html}
-                    </div>
-                  </div>
-                </div>
-                """, unsafe_allow_html=True)
+                prob_label = '<div style="font-family:\'Outfit\',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px">Probability Breakdown</div>'
+                st.markdown(
+                    f'<div class="aa-card">'
+                    f'<div class="aa-card__head">Prediction Output</div>'
+                    f'<div class="result-grid">'
+                    f'<div class="tier-badge {badge_cls}">'
+                    f'<div class="tier-badge__icon">{icon}</div>'
+                    f'<div class="tier-badge__name">{tier}</div>'
+                    f'<div class="tier-badge__sub">Predicted KPI Tier</div>'
+                    f'</div>'
+                    f'<div>{prob_label}{prob_html}</div>'
+                    f'</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
         else:
             st.markdown("""
             <div class="aa-card aa-card--flat" style="text-align:center;padding:44px 20px">
