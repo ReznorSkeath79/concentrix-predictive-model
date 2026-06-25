@@ -2,6 +2,51 @@
 
 ---
 
+## 2026-06-26 — LightGBM NaN categorical dtype crash at inference — dtype sniffing breaks on NaN
+
+**What:** `predict_one()` crashed with LightGBM ValueError `"train and valid dataset categorical_feature do not match"` when any categorical feature had a NaN value. This made the CSV batch tab completely non-functional — the CSV template the app generates is all-NaN, so uploading it and scoring immediately crashed.
+
+**Root cause:** `encoder.transform()` returns `float64` NaN for missing categorical values (not the original string dtype). The guard `X_enc.select_dtypes(include=["object"])` only catches string-typed columns. A column that is entirely NaN has dtype `float64`, not `object` — so the `object→category` cast loop skips it. LightGBM was trained with `category` dtype on those columns; receiving `float64` at inference caused the mismatch error.
+
+**Rule:** Never sniff dtype to identify categorical columns at inference time. Force `category` dtype by column name from schema/metadata, not by inspecting the current dtype. Dtype sniffing breaks silently on NaN-only columns.
+
+**Fix applied:** `load_artifact()` now computes `_low_card_cats` (schema categoricals not in `high_card_cols`) and stores it in the artifact dict. `predict_one()` has a second loop that forces `category` dtype on those columns regardless of current dtype — after the existing `object→category` loop, not instead of it.
+
+**Verification pattern:**
+```python
+from app.predictor import load_artifact, predict_one
+import numpy as np
+artifact, schema = load_artifact()
+# all-NaN simulates CSV template uploaded as-is
+result = predict_one(artifact, {feat: np.nan for feat in artifact['feature_cols']})
+assert result['tier'] in artifact['kpi_tier_labels']
+assert abs(sum(result['proba']) - 1.0) < 0.001
+```
+
+**Cost:** Caught by final whole-branch reviewer after all task reviews passed — ~1 review + fix + re-review cycle, ~30 min.
+
+---
+
+## 2026-06-25 — evaluate.py TOP_PERF_CLASSES IndexError on 3-class model — hardcoded class count assumption
+
+**What:** `evaluate_model()` crashed with `IndexError: index 3 is out of bounds for axis 1 with size 3` when called with the 3-class KPI model. Full training completed; crash happened in evaluation phase, preventing artifact save.
+
+**Root cause:** `evaluate.py` was designed exclusively for the 4-class STAR model. It hardcoded `TOP_PERF_CLASSES = [2, 3]` (from config), `N_CLASSES = 4` in `_plot_confusion`, and `N_CLASSES` in `_plot_calibration`. When a 3-class probability matrix of shape `(N, 3)` was passed, indexing column 3 raised IndexError.
+
+**Rule:** Any shared evaluation utility that hardcodes class counts or class indices MUST guard against the actual model's class count. Always use `y_proba.shape[1]` or `len(np.unique(y_true))` — never a module-level constant in functions designed to be model-agnostic.
+
+**Verification pattern:**
+```python
+# Before calling evaluate_model on any non-STAR model, confirm:
+assert y_proba.shape[1] == len(class_labels), "class count mismatch"
+# After fix — this should not crash on 3-class KPI model:
+python -c "import src.train_kpi_model; src.train_kpi_model.run()"
+```
+
+**Cost:** ~14 minutes (full second Optuna run needed due to crash before artifact save)
+
+---
+
 ## 2026-06-25 — Inline 14.7MB HTML causes browser "Initialising" hang; initSimulator() never fires
 
 **What:** Added a SHAP-powered feature weight simulator to executive_summary.html. Data was embedded inline as a `<script>window.MODEL_DATA = {...7.3MB JSON...}</script>`. Browser opens the file but simulator stays stuck on "Initialising…" indefinitely.
