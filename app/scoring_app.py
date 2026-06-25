@@ -18,8 +18,9 @@ _ROOT     = _HERE.parent
 _MODEL    = _ROOT / "models" / "model_kpi_a.joblib"
 _SCHEMA   = _ROOT / "models" / "schema_kpi.json"
 
-# Add src/ to path (predictor.py does the same internally)
+# Add repo root + src/ to path so imports work both locally and on Streamlit Cloud
 import sys
+sys.path.insert(0, str(_ROOT))
 sys.path.insert(0, str(_ROOT / "src"))
 
 from app.predictor    import load_artifact, predict_one, predict_batch
