@@ -8,13 +8,13 @@
 
 | Field | Value |
 |-------|-------|
-| Total CDM agents | 65,039 |
-| Labeled (PTG non-null) | 41,717 (64.1%) |
-| Tercile p33 cutpoint | 91.6565 |
-| Tercile p67 cutpoint | 102.9797 |
-| At-Risk agents (tier 0) | 13,906 |
-| Developing agents (tier 1) | 13,905 |
-| High Performer agents (tier 2) | 13,906 |
+| Total CDM agents | 58,140 |
+| Labeled (PTG non-null) | 40,919 (70.4%) |
+| Tercile p33 cutpoint | 91.6147 |
+| Tercile p67 cutpoint | 102.9463 |
+| At-Risk agents (tier 0) | 13,640 |
+| Developing agents (tier 1) | 13,639 |
+| High Performer agents (tier 2) | 13,640 |
 
 ---
 
@@ -22,20 +22,20 @@
 
 | Metric | Value |
 |--------|-------|
-| Test samples | 8,344 |
-| **Accuracy** | 🔴 **58.3%** |
+| Test samples | 8,184 |
+| **Accuracy** | 🔴 **60.5%** |
 | Majority baseline accuracy | 33.3% |
-| Lift vs majority baseline | +25.0% |
-| Macro F1 | 0.5820 |
-| AUC (OvR macro) | 0.7624 |
+| Lift vs majority baseline | +27.1% |
+| Macro F1 | 0.6032 |
+| AUC (OvR macro) | 0.7893 |
 
 ### Per-Class Results
 
 | Class | Precision | Recall | F1 | Support |
 |-------|-----------|--------|----|---------|
-| At-Risk | 0.622 | 0.618 | 0.620 | 2,782 |
-| Developing | 0.521 | 0.496 | 0.508 | 2,781 |
-| High Performer | 0.602 | 0.635 | 0.618 | 2,781 |
+| At-Risk | 0.656 | 0.647 | 0.651 | 2,728 |
+| Developing | 0.540 | 0.497 | 0.518 | 2,728 |
+| High Performer | 0.613 | 0.670 | 0.641 | 2,728 |
 
 ---
 

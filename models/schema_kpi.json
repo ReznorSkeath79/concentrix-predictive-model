@@ -9,8 +9,8 @@
       "High Performer"
     ],
     "cutpoints": {
-      "p33": 91.65650000000001,
-      "p67": 102.97966666666666
+      "p33": 91.61466666666666,
+      "p67": 102.94633333333333
     }
   },
   "features": {
@@ -245,216 +245,6 @@
         1
       ]
     },
-    "CL-Public Service": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Health Care": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-PRC": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-CPA": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Teaching": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Legal": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-ForeignLanguage": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-SixSigma": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Project": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-BI": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Social Media": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-COPC": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-ISO": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Salesforce": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Domo": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Microsoft": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-CISCO": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-ORACLE": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-LINUX": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-IBM": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Google": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Adobe": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "CL-Java": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Jeepney": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Tricycle": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Train": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Van": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Bus": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Grab": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
-    "Tr-Fast craft": {
-      "type": "binary",
-      "values": [
-        0,
-        1
-      ]
-    },
     "ISP PLDT": {
       "type": "binary",
       "values": [
@@ -624,61 +414,6 @@
         "XIII"
       ]
     },
-    "GC Barangay": {
-      "type": "categorical",
-      "values": [
-        "#045 Magsaysay Drive Loakan Proper",
-        "#11 Canidha Subdivision Purok V Camachiles",
-        "#12 purok 2 Honeymoon Road.",
-        "#120 Purok 2 Scout Barrio",
-        "#191 Upper Bonifacio Street Baguio City",
-        "#209 Purok 6, Brgy. Ulat",
-        "#22a bal marcoville baguio city 2600",
-        "#26 City Camp Central",
-        "#42-2 Sapang Palay Concepcion Grande",
-        "#7 Tangigue Street New Salmonan Brgy Aquino Agdao Davao city",
-        "#7087 Apitong Street Kias Baguio City",
-        "#8 Mirasol.St. Mandurriao",
-        "#80 A, Purok 1, Ambuklao Road, Gibraltar",
-        "#81 Zigzag st. Malhacan",
-        "#9 Village 10 Bugac Maa, Davao City",
-        "#95 Don Candido Subdivision North Fundidor Molo Iloilo City",
-        ".",
-        "0",
-        "003 Dahlia Street San Luis Village Baguio City",
-        "0319 Modesta st villacor langka",
-        "04 Lower Brookside, Baguio City",
-        "048 Naval St. Malaya",
-        "067 Dulong Habay, Habay II City of Bacoor, Cavite",
-        "0769 Verde Avenue Pinaod, San Ildefonso, Bulacan",
-        "082 Libis st. Brgy. Guyong",
-        "098 Sevel Village Sipi Daraga Albay",
-        "1",
-        "1 Purok 3 Pinsao Pilot Project",
-        "1-A",
-        "10",
-        "10- A",
-        "10-A",
-        "100",
-        "1000",
-        "1007",
-        "1008",
-        "1009",
-        "101",
-        "1012",
-        "1014",
-        "1017",
-        "102",
-        "1023",
-        "1025",
-        "103",
-        "1034 rose street Lopez building unit 4 BRGY maduya carmona cavite",
-        "1038",
-        "104",
-        "1040 Quezon Dr. Dau",
-        "1041 Banana street, San Francisco, Mabalacat City, 2010 Pampanga Philippines"
-      ]
-    },
     "GC Education": {
       "type": "categorical",
       "values": [
@@ -735,7 +470,6 @@
       "type": "categorical",
       "values": [
         "(Blank)",
-        "Concentrix unable to deliver equipment, otherwise staff meets criteria",
         "Eligible to Work From Home (WAH)",
         "Ineligible to Work From Home (WAH)",
         "Not Applicable",
@@ -746,17 +480,10 @@
     "Management Level Description": {
       "type": "categorical",
       "values": [
-        "Business Support - Entry",
-        "Business Support - Intermediate",
-        "Business Support - Senior",
         "Contact Center Advisor - Entry",
         "Contact Center Advisor - Intermediate",
         "Contact Center Advisor - Senior",
-        "Professional - Entry",
-        "Professional - Intermediate I",
-        "Supervisory/Management - Team Leader Trainee",
-        "Supervisory/Management - Team Leader/Supervisor",
-        "Technical Professional - Advanced"
+        "Supervisory/Management - Team Leader Trainee"
       ]
     },
     "Job Grade": {
@@ -766,94 +493,11 @@
         12.0
       ]
     },
-    "MSA Fusion": {
-      "type": "categorical",
-      "values": [
-        "0036 - Google - GOOGLE-DRIVE",
-        "0038 - Federal Express - FEDEX",
-        "0055 - Cdw - CDWBIDSUPPORT",
-        "0085 - Google - GOOGLE-NOC",
-        "0231 - Razer - RAZER",
-        "0284 - Dish - DISH",
-        "0408 - Mitac - MITACANZ",
-        "0480 - Google - GOOGLEPLAY",
-        "0531 - Amazon - AMAZONSELL",
-        "0532 - Amazon - AMAZONWVCS",
-        "0545 - Avalon - APPLEPTY",
-        "0849 - Citibank - CITICORP",
-        "0874 - General Motors - GENERALMOTORS",
-        "0938 - Xerox - IBMXEROX",
-        "0976 - Keybank - KEYBANKCOLLECT",
-        "0977 - Keybank - KEYBANKCUSTSRV",
-        "10114 - Stellantis - 980001349",
-        "10123 - Cigna - 980001364",
-        "10126 - Portable On Demand Storage - 980001373",
-        "10172 - Cigna - 980001387",
-        "10176 - Cigna - 980001388",
-        "10202 - Intuit - 980001413",
-        "10212 - Bytedance - 980001425",
-        "10217 - Citibank - 980001431",
-        "10218 - Cognosphere - 980001432",
-        "10241 - Independence Blue Cross - 980001442",
-        "10244 - Caresource - 980001470",
-        "10245 - Allstate - 980001449",
-        "10310 - Vodafone - 980001617",
-        "10316 - Distrokid - 980001627",
-        "10317 - Rain - 980001625",
-        "10327 - Lowes - 980001638",
-        "10329 - Cvs Health Aetna - 980001640",
-        "10374 - Autodesk - S00083454",
-        "10387 - Nax Group - 980001657",
-        "10422 - Reckittbenck - 980001706",
-        "10473 - Pinduoduo - 980001712",
-        "10498 - Facebook - 980001747",
-        "10588 - Citibank - 980001829",
-        "10589 - Citibank - 980001832",
-        "10611 - Citibank - 980001830",
-        "10614 - Comcast Corp - 980001792",
-        "10631 - A Place For Mom - 980001874",
-        "10633 - T_Mobile - 980001885",
-        "10658 - Amazon - 980001870",
-        "10661 - Xerox - 980001925",
-        "10663 - Worldcoin - 980001924",
-        "10664 - Google - 980001934",
-        "10718 - Cigna - 980001959",
-        "10724 - Dish - 980001986"
-      ]
-    },
     "Site Distance": {
       "type": "numeric",
       "range": [
         0.1142550945383851,
         1043.1325339206169
-      ]
-    },
-    "Valley Fault": {
-      "type": "numeric",
-      "range": [
-        0.0,
-        1.0
-      ]
-    },
-    "Zip Code": {
-      "type": "numeric",
-      "range": [
-        0.0,
-        9805.0
-      ]
-    },
-    "Site Longitude": {
-      "type": "numeric",
-      "range": [
-        120.60919,
-        125.6312138
-      ]
-    },
-    "Site Latitude": {
-      "type": "numeric",
-      "range": [
-        7.0916329,
-        16.39878
       ]
     },
     "cnt_L": {
@@ -884,13 +528,6 @@
         23.0
       ]
     },
-    "cnt_Tr": {
-      "type": "numeric",
-      "range": [
-        0.0,
-        7.0
-      ]
-    },
     "cnt_ISP": {
       "type": "numeric",
       "range": [
@@ -912,29 +549,15 @@
         1.0
       ]
     },
-    "dist_bucket": {
-      "type": "categorical",
-      "values": [
-        "15-30km",
-        "30-60km",
-        "5-15km",
-        "<5km",
-        ">60km"
-      ]
-    },
     "Role Type": {
       "type": "categorical",
       "values": [
-        "Floor Lead",
-        "HR",
         "Ops Admin",
         "Production",
         "Quality",
         "Team Lead",
-        "Trainer",
         "Training",
-        "Transition",
-        "WFM"
+        "Transition"
       ]
     },
     "Person Status": {
@@ -969,35 +592,26 @@
         "Advisor II, Transaction Processing",
         "Assistant, Digital Design",
         "Assistant, Digital Operations",
-        "Associate, Content Development",
-        "Associate, Controls & Compliance",
-        "Associate, Delivery Excellence",
         "Associate, Digital Design",
-        "Associate, Operations Reporting",
-        "Associate, Operations Support",
-        "Associate, People Solutions",
-        "Associate, WFM Planning & Scheduling",
-        "Associate, WFM Real Time Management",
-        "Associate, WFM Scheduling",
-        "Communications Trainer II",
         "Market Research Interview I",
         "Program Ready Trainer I",
-        "Quality Evaluator",
-        "Recruiter I",
         "Representative, Operations",
-        "Representative, Operations Support",
         "Representative, Quality Trainee (Agent)",
-        "Representative, Talent Acquisition",
         "Representative, WFM Real Time Management \u2013 Trainee (Agent)",
         "SME, Operations",
-        "Specialist, Operations",
-        "Specialist, Operations Support",
-        "Specialist, Renewal Sales",
         "Sr Representative, Quality Trainee (Agent)",
         "Sr. Advisor I, Blended Support",
         "Sr. Advisor I, Collections",
         "Sr. Advisor I, Customer Service",
-        "Sr. Advisor I, NOC Support"
+        "Sr. Advisor I, NOC Support",
+        "Sr. Advisor I, Sales",
+        "Sr. Advisor I, Technical Support",
+        "Sr. Advisor I, Transaction Processing",
+        "Sr. Assistant, Digital Design",
+        "Sr. Assistant, Digital Operations",
+        "Sr. SME, Operations",
+        "Team Leader Trainee, Operations",
+        "Team Leader, PHL PAP"
       ]
     },
     "Support Type": {
@@ -1018,8 +632,7 @@
     "Cost Center Billable Flag": {
       "type": "categorical",
       "values": [
-        "Billable",
-        "Non-Billable"
+        "Billable"
       ]
     },
     "Client": {
@@ -1060,21 +673,21 @@
         "BNP Paribas",
         "BOOKINGCOM",
         "BOSLEY",
-        "Banco de Oro",
         "Block Inc",
         "Brown & Brown Inc",
         "ByteDance",
         "CANVA",
         "CAPITALONE",
+        "CATALINA",
         "CATERPILLAR",
         "CDW",
         "CEAA",
         "CIGNA",
         "CITIBANK",
-        "COGNOSPHERE",
         "COLONIALPENN",
-        "CONCENTRIX",
-        "CONVEY HEALTH"
+        "CONVEY HEALTH",
+        "CVS Health Aetna",
+        "CareSource"
       ]
     },
     "Program": {
@@ -1092,7 +705,6 @@
         "ALLSTATE PGM",
         "AMAZON BLINK",
         "AMAZON CS",
-        "AMEX Merchant NA",
         "AMEXEXPRESS PGM",
         "APM PGM",
         "APPFOLIO PGM",
@@ -1129,62 +741,8 @@
         "Allstate NA HUB",
         "Allstate Unlicensed",
         "Amazon CS PGM",
-        "Amazon Eero PGM"
-      ]
-    },
-    "Activity": {
-      "type": "categorical",
-      "values": [
-        "ACA Chat/Portal",
-        "ACA LEGACY",
-        "ACA Member Services",
-        "ACTIVANT Epicor_BPM_IBV_T1",
-        "AETINSDENTAL",
-        "AETINSPROVOB",
-        "AHA Philippines",
-        "AHA Philippines L2",
-        "AHA Philippines L3",
-        "AHA Philippines L4",
-        "AIRBNB Hotel Tonight_CS_BLND_T1",
-        "AIRBNB R1_CS_BLND_T1",
-        "AIRNEWZEALAND Live_CS_CHAT_T1",
-        "ALDARPROPERTIES_Dev_CS_BLND_Escal",
-        "ALDARPROPERTIES_Estate_CS_BLND_Escal",
-        "ALLSTATE Telematics_CS_CHAT_T1",
-        "ALLSTATE Telematics_CS_IBV_T1",
-        "ALLSTATE Unlicensed_CS_IBV_T1",
-        "AMEX Fraud Cebu C5",
-        "ANZ Call2Ride",
-        "ANZ Consumer Uber Direct",
-        "ANZ Courier Pack Delivery",
-        "ANZ Driver Phone",
-        "ANZ Driver Premium Support Phones",
-        "APM SRC_CS_IBV_T1",
-        "APPFOLIO LISA_CS_CHAT_T1",
-        "APPFOLIO SM Dispatch_CS_BO_T1",
-        "APPFOLIO SM Phone_CS_IBV_T1",
-        "APPFOLIO SM Text_CS_MSG_T1",
-        "APTOSINC NA English_TECH_BLND_T1",
-        "ASHLEY_Guest Experts_CS_IBV_T1",
-        "AT&T AEG Care UTC MDC",
-        "AT&T AEG Care UTC UP",
-        "AT&T DAC Libis 425",
-        "AT&T Mobility Prepaid GL",
-        "AT&T WLNP 425",
-        "ATT AEG Back Office AL",
-        "ATT ATS Clark AC",
-        "ATT ISM Clark",
-        "ATT MSS Alabang 1",
-        "ATT MSS Alabang 2",
-        "ATT MSS G5",
-        "ATT MSS GIGA",
-        "ATT Mobility Loyalty Chat",
-        "AVENTON_CS_EMAIL_T1",
-        "AXA CS",
-        "AXA E-Services",
-        "AXA GI Inbound",
-        "AXA Health Inbound",
-        "AXA Outbound"
+        "Amazon Eero PGM",
+        "Amazon Ring PGM"
       ]
     },
     "Site": {
@@ -1240,61 +798,6 @@
         "Makati - Ayala North Exchange",
         "Makati - Glortietta 5",
         "Makati - SLC Bldg"
-      ]
-    },
-    "Campus": {
-      "type": "categorical",
-      "values": [
-        "Angeles City Phil (Clark 2)",
-        "Ayala North Exchange - Makati",
-        "BGC Meta",
-        "Bacolod City Phil(One Sanparq)",
-        "Bacolod City Phil(Two Sanparq)",
-        "Baguio 2 Philippines",
-        "Baguio City Philippines",
-        "CEBU",
-        "Cagayan de Oro",
-        "Cebu - One Montage",
-        "Cebu 3 Phil",
-        "Cebu 5 Call Center - The Link",
-        "Cebu City (Barangay Apas)",
-        "Cebu City - Exchange Tower",
-        "Cebu City - FCC Tower",
-        "Cebu City Phil (Arcenas)",
-        "Cebu City Phil (Asiatown TGU)",
-        "Clark Phil",
-        "Client Site Central Bloc Corp Center Cebu",
-        "Davao",
-        "Davao City Diamond Tower",
-        "Davao City Philippines",
-        "GIGA",
-        "Iloilo",
-        "Laguna/Nuvali Philippines",
-        "Makati City Phil (Glorietta)",
-        "Makati Phil",
-        "Mall of Asia Phil",
-        "Mandaluyong City Phil (Mega)",
-        "Manila - Net Park",
-        "Manila/Santa Cruz Phil",
-        "Muntinlupa Phil (Alabang 1)",
-        "Muntinlupa Phil (Alabang 2)",
-        "Muntinlupa Phil (Alabang 3)",
-        "Naga",
-        "QUE-Giga Tower 28th  29th Flrs IDAKS",
-        "Quezon City (Eton)",
-        "Quezon City - Vertis North",
-        "Quezon City Phil (GBF)",
-        "Quezon City Phil (MDC 100)",
-        "Quezon City Phil (MDC 100) - Mezzanine",
-        "Quezon City Phil (UP - L)",
-        "Quezon City Phil (UP)",
-        "Quezon City, Cyber West",
-        "Quezon City, EXXA Tower",
-        "Quezon City, Spark",
-        "Quezon City, Tera Tower",
-        "Quezon City, UP Ayala",
-        "Shaw 2 Phil",
-        "Taguig City Phil"
       ]
     },
     "City": {

@@ -183,6 +183,12 @@ def run():
     log.info("\n" + "=" * 60 + "\n  MODEL KPI-A  (KPI tier prediction)\n" + "=" * 60)
 
     df = load_cdm()
+    pre_filter = len(df)
+    df = df[
+        df["Job Title"].str.contains("Advisor", na=False, case=False) |
+        (df["Role Type"] == "Production")
+    ].copy()
+    log.info(f"  Advisor/Production filter: {pre_filter:,} → {len(df):,} rows")
     X, y, feat_cols, tier_info, flag_cols = prep_Xy(df)
 
     log.info(f"\n  Tercile cutpoints → p33={tier_info['cutpoints']['p33']:.2f}  "

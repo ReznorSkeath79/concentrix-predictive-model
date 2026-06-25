@@ -79,6 +79,19 @@ ALWAYS_DROP = [
     "email_lower",
     "_email_lower",
     "_emp_str",
+    # Transportation noise (raw flags + engineered aggregate)
+    "Tr-Jeepney", "Tr-Tricycle", "Tr-Train", "Tr-Van", "Tr-Bus",
+    "Tr-Grab", "Tr-Fast craft", "cnt_Tr", "dist_bucket",
+    # Geographic noise — low signal, high cardinality
+    "GC Barangay", "Zip Code", "Valley Fault", "Site Longitude", "Site Latitude",
+    # Individual cert flags — keep cnt_CL aggregate instead
+    "CL-Public Service", "CL-Health Care", "CL-PRC", "CL-CPA", "CL-Teaching",
+    "CL-Legal", "CL-ForeignLanguage", "CL-SixSigma", "CL-Project", "CL-BI",
+    "CL-Social Media", "CL-COPC", "CL-ISO", "CL-Salesforce", "CL-Domo",
+    "CL-Microsoft", "CL-CISCO", "CL-ORACLE", "CL-LINUX", "CL-IBM",
+    "CL-Google", "CL-Adobe", "CL-Java",
+    # Post-hire leaky features
+    "Activity", "Campus", "MSA Fusion",
 ]
 
 # ── Binary flag column prefixes (cols 29-112 in SDD1) ────────────────────────
